@@ -6,8 +6,8 @@ class WorldMap extends Component {
   render() {
     const projection = geoMercator()
     const pathGenerator = geoPath().projection(projection)
-    const countries = worlddata.features
-      .map((d,i) => <path
+    const countries = worlddata.features.map((d, i) =>
+      <path
         key={'path' + i}
         d={pathGenerator(d)}
         className='countries'
