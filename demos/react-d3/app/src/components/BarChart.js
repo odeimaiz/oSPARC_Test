@@ -23,6 +23,7 @@ class BarChart extends Component {
     const yScale = scaleLinear()
       .domain([0, dataMax])
       .range([0, this.props.size[1]])
+    const colWidth = this.props.size[0]/this.props.data.length;
 
     select(node)
       .selectAll('rect')
@@ -40,10 +41,10 @@ class BarChart extends Component {
       .selectAll('rect')
       .data(this.props.data)
       .style('fill', '#fe9922')
-      .attr('x', (d, i) => i * 25)
+      .attr('x', (d, i) => i * colWidth)
       .attr('y', d => this.props.size[1] - yScale(d))
       .attr('height', d => yScale(d))
-      .attr('width', 25)
+      .attr('width', colWidth)
   }
 
   render() {

@@ -9,19 +9,22 @@ class BarChart2 extends Component {
     const yScale = scaleLinear()
       .domain([0, dataMax])
       .range([0, upperLimit]);
+    const colWidth = this.props.size[0]/this.props.data.length;
+
     const myLine = this.props.data.map((d, i) =>
       <rect
         key={i}
         fill={'#fe9922'}
-        x={i * 25}
+        x={i * colWidth}
         y={upperLimit - yScale(d)}
         height={yScale(d)}
-        width={25}
+        width={colWidth}
       />)
-      return <svg
-        width={this.props.size[0]} height={this.props.size[1]}>
-          {myLine}
-        </svg>
+
+    return <svg
+      width={this.props.size[0]} height={this.props.size[1]}>
+        {myLine}
+      </svg>
   }
 }
 export default BarChart2

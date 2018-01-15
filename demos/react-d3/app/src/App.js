@@ -12,9 +12,9 @@ class App extends Component {
           <h2 className="App-title">D3 within React</h2>
         </header>
         <div>
-          <BarChart data={[5,10,1,3]} size={[300,700]} />
+          <BarChart data={[5,10,1,3]} size={[200,700]} />
           <WorldMap size={[1000,700]} />
-          <BarChart2 data={[6,11,2,4]} size={[300,700]} />
+          <BarChart2 data={[6,11,2,4]} size={[200,700]} />
         </div>
       </div>
     );
