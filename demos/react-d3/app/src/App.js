@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import BarChart from './components/BarChart'
+import WorldMap from './components/WorldMap'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h2 className="App-title">D3 within React</h2>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div>
+          <BarChart data={[5,10,1,3]} size={[300,700]} />
+          <WorldMap size={[1000,700]} />
+        </div>
       </div>
     );
   }
