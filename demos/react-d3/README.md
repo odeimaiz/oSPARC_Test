@@ -1,7 +1,7 @@
-# Front-end Prototype using [React.js](https://reactjs.org/)
+# Front-end Prototype using [React.js and D3](https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71)
 
 ## Description
-  - The goal of this prototype is to integrate d3.js in a Reacct application
+  - The goal of this prototype is to integrate d3.js in a React application
 
 
 ## Setup

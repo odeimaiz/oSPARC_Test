@@ -12,9 +12,11 @@ class WorldMap extends Component {
         d={pathGenerator(d)}
         className='countries'
       />)
-      return <svg width={this.props.size[0]} height={this.props.size[1]}>
+
+    return <svg
+      width={this.props.size[0]} height={this.props.size[1]}>
         {countries}
-        </svg>
+      </svg>
    }
 }
 export default WorldMap
