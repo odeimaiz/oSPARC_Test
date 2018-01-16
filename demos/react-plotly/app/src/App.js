@@ -9,7 +9,7 @@ class App extends Component {
         <header className="App-header">
           <h2 className="App-title">Plotly within React</h2>
         </header>
-        <div width={'500px'}>
+        <div>
           <PlotlyPlot size={[500,500]} />
         </div>
       </div>
