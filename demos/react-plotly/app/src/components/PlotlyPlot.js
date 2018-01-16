@@ -25,9 +25,9 @@ class PlotlyPlot extends Component {
         ]}
 
         layout={{
-          width: 320,
-          height: 240,
-          title: 'A Fancy Plot'
+          width: this.props.size[0],
+          height: this.props.size[1],
+          title: 'My first Plot'
         }}
       />
     );

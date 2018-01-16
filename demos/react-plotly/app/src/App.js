@@ -9,8 +9,8 @@ class App extends Component {
         <header className="App-header">
           <h2 className="App-title">D3 within React</h2>
         </header>
-        <div>
-          <PlotlyPlot data={[5,10,1,3]} size={[200,700]} />
+        <div width={'500px'}>
+          <PlotlyPlot size={[500,500]} />
         </div>
       </div>
     );
