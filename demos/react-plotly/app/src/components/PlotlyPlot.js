@@ -58,6 +58,10 @@ class PlotlyPlot extends Component {
           title: this.props.title,
           xaxis: {
             title: 'tau (sec)'
+          },
+          yaxis: {
+            autorange: false,
+            range: [-0.1, 0.85]
           }
         }}
       />
