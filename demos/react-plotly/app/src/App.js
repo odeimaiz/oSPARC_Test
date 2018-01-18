@@ -28,7 +28,7 @@ class App extends Component {
         </header>
         <div>
           <ReactMyTable data={outputController} />
-          <PlotlyPlot size={[500,500]} />
+          <PlotlyPlot data={outputController} size={[1000,500]} title={'Heart Rate(r)'} />
         </div>
       </div>
     );

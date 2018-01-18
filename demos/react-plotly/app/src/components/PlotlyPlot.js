@@ -8,29 +8,57 @@ const Plot = createPlotlyComponent(Plotly);
 class PlotlyPlot extends Component {
 
   render () {
-    let myArray = [
+    let x_values = []
+    let y1_values = []
+    let y2_values = []
+    let y3_values = []
+    let y5_values = []
+    for (var i = 0; i < this.props.data.length; i++) {
+      x_values.push(this.props.data[i]['time'])
+      y1_values.push(this.props.data[i]['rate'])
+      y2_values.push(this.props.data[i]['demand'])
+      y3_values.push(this.props.data[i]['symEff']/0.0008)
+      y5_values.push(this.props.data[i]['directPSEff']/0.0008)
+    }
+
+    let myData = [
       {
         type: 'scatter',
-        x: [1, 2, 3],
-        y: [6, 2, 3],
-        marker: {
-          color: 'rgb(16, 32, 77)'
-        }
-      },
-      {
-        type: 'bar',
-        x: [1, 2, 3],
-        y: [6, 2, 3],
-        name: 'bar chart example'
+        x: x_values,
+        y: y1_values,
+        name: 'rate',
+        marker: { color: 'magenta' }
+      }, {
+        type: 'scatter',
+        x: x_values,
+        y: y2_values,
+        name: 'demand',
+        marker: { color: 'black' }
+      }, {
+        type: 'scatter',
+        x: x_values,
+        y: y3_values,
+        name: 'sympathetic efferent',
+        marker: { color: 'red' }
+      }, {
+        type: 'scatter',
+        x: x_values,
+        y: y5_values,
+        name: 'direct parasympathetic efferent',
+        marker: { color: 'blue' }
       }
     ];
+
     return (
       <Plot
-        data={myArray}
+        data={myData}
         layout={{
           width: this.props.size[0],
           height: this.props.size[1],
-          title: 'My first Plot'
+          title: this.props.title,
+          xaxis: {
+            title: 'tau (sec)'
+          }
         }}
       />
     );
