@@ -5,8 +5,15 @@ import PlotlyPlot from './components/PlotlyPlot'
 import outputControllerOut from './data/outputControllerOut.json';
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      outputControllerOutRaw: [],
+      outputControllerOutReduced: []
+    }
+  }
 
-  render() {
+  componentDidMount() {
     let outputController = []
     for (var i = 0; i < outputControllerOut.length; i++) {
       let newItem = {
@@ -21,14 +28,34 @@ class App extends Component {
       outputController.push(newItem)
     }
 
+    this.setState({
+      outputControllerOutRaw: outputController,
+      outputControllerOutReduced: outputController
+    })
+  }
+
+  reduceSamples(e) {
+    e.preventDefault()
+    const min = 0;
+    const max = this.state.outputControllerOutRaw.length;
+    const rand = min + Math.random() * (max - min);
+    this.setState({
+      outputControllerOutReduced: this.state.outputControllerOutRaw.slice(0, rand)
+    })
+  }
+
+  render() {
     return (
       <div className="App">
         <header className="App-header">
           <h2 className="App-title">Plotly and ReactTables within React</h2>
         </header>
         <div>
-          <ReactMyTable data={outputController} />
-          <PlotlyPlot data={outputController} size={[1000,500]} title={'Heart Rate(r)'} />
+          <ReactMyTable data={this.state.outputControllerOutRaw} />
+          <button onClick={(e) => this.reduceSamples(e)}>
+            Reduce samples
+          </button>
+          <PlotlyPlot data={this.state.outputControllerOutReduced} size={[1000,500]} title={'Heart Rate(r)'} />
         </div>
       </div>
     );
