@@ -61,7 +61,7 @@ class ReactMyTable extends Component {
           noDataText="Loading.."
           filterable
           defaultFilterMethod={(filter, row) =>
-            String(row[filter.id]) === filter.value}
+            String(row[filter.id]).includes(String(filter.value))}
           columns={columns}
           defaultPageSize={10}
         />
