@@ -3,6 +3,24 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
 class ReactMyTable extends Component {
+  myFilter(filter, row) {
+    if (isNaN(filter.value[0])) {
+      var thres = String(filter.value).substring(1, String(filter.value).length);
+      if (String(filter.value).length < 2)
+        return true
+      switch (filter.value[0]) {
+        case "<":
+          return (row[filter.id] < thres)
+        case ">":
+          return (row[filter.id] > thres)
+        default:
+          return false
+      }
+    } else {
+      return String(row[filter.id]).includes(String(filter.value))
+    }
+  }
+
   render() {
     let avgRate = 0
     for (var i = 0; i < this.props.data.length; i++) {
@@ -61,7 +79,7 @@ class ReactMyTable extends Component {
           noDataText="Loading.."
           filterable
           defaultFilterMethod={(filter, row) =>
-            String(row[filter.id]).includes(String(filter.value))}
+            this.myFilter(filter, row)}
           columns={columns}
           defaultPageSize={10}
         />
