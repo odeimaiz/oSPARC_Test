@@ -36,12 +36,26 @@ class App extends Component {
 
   reduceSamples(e) {
     e.preventDefault()
-    const min = 0;
-    const max = this.state.outputControllerOutRaw.length;
-    const rand = min + Math.random() * (max - min);
-    this.setState({
-      outputControllerOutReduced: this.state.outputControllerOutRaw.slice(0, rand)
-    })
+    const reducebyAvg = false
+    if (reducebyAvg) {
+      const hrAvg = 0.3023866997543023
+      let outputControllerOutReduced = []
+      for (var i = 0; i < this.state.outputControllerOutRaw.length; i++) {
+        if (this.state.outputControllerOutRaw[i]['rate'] > hrAvg) {
+          outputControllerOutReduced.push(this.state.outputControllerOutRaw[i])
+        }
+      }
+      this.setState({
+        outputControllerOutReduced: outputControllerOutReduced
+      })
+    } else {
+      const min = 0;
+      const max = this.state.outputControllerOutRaw.length;
+      const rand = min + Math.random() * (max - min);
+      this.setState({
+        outputControllerOutReduced: this.state.outputControllerOutRaw.slice(0, rand)
+      })
+    }
   }
 
   render() {

@@ -24,24 +24,25 @@ class PlotlyPlot extends Component {
     let myData = [
       {
         type: 'scatter',
+        mode: 'markers',
         x: x_values,
         y: y1_values,
         name: 'rate',
-        marker: { color: 'magenta' }
+        marker: { color: 'magenta', size: 1 }
       }, {
-        type: 'scatter',
+        type: 'markers',
         x: x_values,
         y: y2_values,
         name: 'demand',
         marker: { color: 'black' }
       }, {
-        type: 'scatter',
+        type: 'markers',
         x: x_values,
         y: y3_values,
         name: 'sympathetic efferent',
         marker: { color: 'red' }
       }, {
-        type: 'scatter',
+        type: 'markers',
         x: x_values,
         y: y5_values,
         name: 'direct parasympathetic efferent',
