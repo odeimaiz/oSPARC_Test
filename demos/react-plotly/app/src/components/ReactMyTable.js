@@ -3,6 +3,12 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
 class ReactMyTable extends Component {
+  constructor(props) {
+    super(props)
+    this.onFilterChanged = this.onFilterChanged.bind(this)
+    this.updatePlotData = this.updatePlotData.bind(this)
+  }
+
   myFilter(filter, row) {
     if (isNaN(filter.value[0])) {
       var thres = String(filter.value).substring(1, String(filter.value).length);
@@ -19,6 +25,15 @@ class ReactMyTable extends Component {
     } else {
       return String(row[filter.id]).includes(String(filter.value))
     }
+  }
+
+  onFilterChanged(state) {
+    this.props.callbackFromParent(this.reactTable.getResolvedState().sortedData)
+  }
+
+  updatePlotData(e) {
+    e.preventDefault()
+    this.props.callbackFromParent(this.reactTable.getResolvedState().sortedData);
   }
 
   render() {
@@ -74,15 +89,21 @@ class ReactMyTable extends Component {
         Header: 'Coef of Variation'
       }]
       return (
-        <ReactTable
-          data={this.props.data}
-          noDataText="Loading.."
-          filterable
-          defaultFilterMethod={(filter, row) =>
-            this.myFilter(filter, row)}
-          columns={columns}
-          defaultPageSize={10}
-        />
+        <div>
+          <ReactTable ref={instance => this.reactTable = instance}
+            data={this.props.data}
+            noDataText="Loading.."
+            filterable={true}
+            defaultFilterMethod={(filter, row) =>
+              this.myFilter(filter, row)}
+            columns={columns}
+            defaultPageSize={10}
+            onFilteredChange={filtered => this.onFilterChanged({ filtered })}
+          />
+          <button onClick={(e) => this.updatePlotData(e)}>
+            Update Plot
+          </button>
+        </div>
       );
   }
 }

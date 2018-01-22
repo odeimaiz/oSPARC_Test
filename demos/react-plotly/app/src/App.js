@@ -11,6 +11,7 @@ class App extends Component {
       outputControllerOutRaw: [],
       outputControllerOutReduced: []
     }
+    this.updateWithFiltered = this.updateWithFiltered.bind(this)
   }
 
   componentDidMount() {
@@ -58,6 +59,12 @@ class App extends Component {
     }
   }
 
+  updateWithFiltered(filteredData) {
+    this.setState({
+      outputControllerOutReduced: filteredData
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -65,11 +72,11 @@ class App extends Component {
           <h2 className="App-title">Plotly and ReactTables within React</h2>
         </header>
         <div>
-          <ReactMyTable data={this.state.outputControllerOutRaw} />
+          <ReactMyTable data={this.state.outputControllerOutRaw} callbackFromParent={this.updateWithFiltered}/>
           <button onClick={(e) => this.reduceSamples(e)}>
             Reduce samples
           </button>
-          <PlotlyPlot data={this.state.outputControllerOutReduced} size={[1000,500]} title={'Heart Rate(r)'} />
+          <PlotlyPlot data={this.state.outputControllerOutReduced} size={[1000,400]} title={'Heart Rate(r)'} />
         </div>
       </div>
     );
