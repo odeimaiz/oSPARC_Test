@@ -23,20 +23,20 @@ qx.Class.define("qxapp.wrappers.JSNetworkX", {
         console.log(jsnetworkx_path + " loaded");
         this.setLibReady(true);
 
-        this.fireDataEvent("JSNetworkXReady", true);
+        this.fireDataEvent("workflowLibReady", true);
       }, this);
 
       dynLoader.addListener('failed', function(e) {
         var data = e.getData();
         console.log("failed to load " + data.script);
-        this.fireDataEvent("JSNetworkXReady", false);
+        this.fireDataEvent("workflowLibReady", false);
       }, this);
 
       dynLoader.start();
     },
   
     events: {
-      "JSNetworkXReady": "qx.event.type.Data",
+      "workflowLibReady": "qx.event.type.Data",
       "NodeClicked": "qx.event.type.Data",
       "DoubleClicked": "qx.event.type.Event",
     },

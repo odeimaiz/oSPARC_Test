@@ -39,6 +39,15 @@
       },
       {
         "uri" : "resource/jsnetworkx/jsnetworkx.js"
+      },
+      {
+        "uri" : "resource/jquery/jquery*.js"
+      },
+      {
+        "uri" : "resource/jquery-flowchart/*.js"
+      },
+      {
+        "uri" : "resource/jquery-flowchart/*.css"
       }
     ]
   }

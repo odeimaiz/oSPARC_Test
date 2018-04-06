@@ -207,7 +207,7 @@ qx.Class.define("qxapp.Application", {
         top: 5
       });
 
-      // add jsNetworkX View
+      // add workflow View
       this._workflowView = new qxapp.components.workflowView(575, 425);
       doc.add(this._workflowView, {
         left: 20,
@@ -231,11 +231,11 @@ qx.Class.define("qxapp.Application", {
         top: 520
       });
 
-      this._workflowView._jsNetworkXWrapper.addListener("NodeClicked", function (e) {
+      this._workflowView._workflowLibWrapper.addListener("NodeClicked", function (e) {
         var nodeClicked = e.getData();
       }, this);
 
-      this._workflowView._jsNetworkXWrapper.addListener("DoubleClicked", function () {
+      this._workflowView._workflowLibWrapper.addListener("DoubleClicked", function () {
       }, this);
 
       var workflowview = this._workflowView;
