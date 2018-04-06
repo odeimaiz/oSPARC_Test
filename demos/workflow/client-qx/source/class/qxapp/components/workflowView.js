@@ -50,9 +50,9 @@ qx.Class.define("qxapp.components.workflowView",
         _jsNetworkXWrapper: null,
         _workflowView: null,
 
-        LoadDefault : function()
+        LoadDefault : function(which)
         {
-            this._jsNetworkXWrapper.AddStuff();
+            this._jsNetworkXWrapper.AddStuff(which);
         },
 
         StartPipeline : function()
@@ -63,6 +63,11 @@ qx.Class.define("qxapp.components.workflowView",
         StopPipeline : function()
         {
             this._jsNetworkXWrapper.StopPipeline();
+        },
+
+        UpdatePipeline : function(data)
+        {
+            this._jsNetworkXWrapper.UpdatePipeline(data);
         },
     },
 });

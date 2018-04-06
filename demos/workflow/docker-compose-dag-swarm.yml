@@ -1,30 +1,38 @@
 version: '3'
 services:
   director:
-    build:
-      context: .
-      dockerfile: ./director/Dockerfile
+    image: masu.speag.com/simcore/comp.backend/director:1.2
     volumes:
-      - ./director:/work
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8010:8010"
+    dns:
+      - 172.16.8.15
     depends_on:
       - rabbit
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
   sidecar:
-    build:
-      context: .
-      dockerfile: ./sidecar/Dockerfile
+    image: masu.speag.com/simcore/comp.backend/sidecar:1.2
     volumes:
       - input:/input
       - output:/output
       - log:/log
-      - ./sidecar:/work
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8000:8000"
     dns:
       - 172.16.8.15
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
   database:
     image: mongo:3.4.0
     environment:
@@ -35,6 +43,12 @@ services:
     ports:
       - "28017:28017"
     command: mongod --httpinterface --rest --smallfiles --logpath=/dev/null # --quiet
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
   database_ui:
     image: mongo-express
     ports:
@@ -43,6 +57,12 @@ services:
       - ME_CONFIG_MONGODB_SERVER=database
     depends_on:
       - database
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
   rabbit:
     image: rabbitmq:3-management
     environment:
@@ -50,6 +70,9 @@ services:
       - RABBITMQ_DEFAULT_PASS=z43
     ports:
       - "15672:15672"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
   flower:
     image: ondrejit/flower:latest
     command: --broker=amqp://z43:z43@rabbit:5672
@@ -57,8 +80,14 @@ services:
       - 5555:5555
     depends_on:
       - director
+    deploy:
+      placement:
+        constraints: [node.role == manager]
   redis:
     image: redis
+    deploy:
+      placement:
+        constraints: [node.role == manager]
   redis-commander:
     image:   ficusio/redis-commander
     command: --redis-host redis
@@ -66,12 +95,18 @@ services:
       - "8082:8081"
     depends_on:
       - redis
+    deploy:
+      placement:
+        constraints: [node.role == manager]
   db:
     image: mysql:5.7
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=z43
       - MYSQL_DATABASE=dag_celery
+    deploy:
+      placement:
+        constraints: [node.role == manager]
   adminer:
     image: adminer
     restart: always
@@ -79,19 +114,18 @@ services:
       - 8070:8080
     depends_on:
       - db
-#  qxapp:
-#    build:
-#      context: .
-#      dockerfile: _dockerfiles/qxapp/node/Dockerfile
-#      args:
-#        web_app_port: 9090
-#        s4l_ip: "172.16.9.89"
-#        s4l_port_app: 9095
-#        s4l_port_mod: 9096
-#    ports:
-#      - '8080:9090'
-#    depends_on:
-#      - director
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+  qxapp:
+    image: masu.speag.com/simcore/webserver/dag:1.2
+    ports:
+      - '8071:9090'
+    depends_on:
+      - director
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 volumes:
   input:
   output:

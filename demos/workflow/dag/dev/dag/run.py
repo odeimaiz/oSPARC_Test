@@ -11,13 +11,13 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-#Base.metadata.drop_all(engine, checkfirst=True)
-#CeleryTask.__table__.drop(engine, checkfirst=True)
+Base.metadata.drop_all(engine, checkfirst=True)
+CeleryTask.__table__.drop(engine, checkfirst=True)
 CeleryTask.__table__.create(engine, checkfirst=True)
 Base.metadata.create_all(engine)
 
 for i in range(8):
-    session.add(Task(sleep=random.randint(1, 7))) # sleep for 1-7 secs
+    session.add(Task(sleep=random.randint(2, 7))) # sleep for 1-7 secs
 
 session.add(
     Workflow(
@@ -37,7 +37,14 @@ session.commit()
 
 workflow = session.query(Workflow).all()[-1]
 
-run.apply_async(
+r = run.apply_async(
     args=(workflow.id,),
     queue=QUEUE_NAME
 )
+print(r.info)
+#def on_raw_message(body):
+#    print(body)
+
+#print (r.get(on_message=on_raw_message, propagate=False))
+
+

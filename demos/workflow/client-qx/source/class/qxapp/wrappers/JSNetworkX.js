@@ -71,34 +71,41 @@ qx.Class.define("qxapp.wrappers.JSNetworkX", {
         }, autoUpdate);
       },
 
-      AddStuff : function()
+      AddStuff : function(loadExample)
       {
-        const loadExample = 1;
+        for (var n of this._mainGraph.nodes()){
+            this._mainGraph.removeNode(n);
+        }
+
+        //const loadExample = 1;
         if (loadExample === 0)
         {
           // #0: Undirected weighted graph
           // Main graph would need to be changed to jsnx.Graph();
-          this._mainGraph.addWeightedEdgesFrom([[2,3,10]]);
-          this._mainGraph.addStar([3,4,5,6], {weight: 5}); 
-          this._mainGraph.addStar([2,1,0,-1], {weight: 3});
+          this._mainGraph.addNodesFrom([1,2,3,4,5,6,7,8], {color: 'blue'});
+          this._mainGraph.addEdgesFrom([[1,3],[3,5],[2,4],[4,5],[5,6],[5,7],[6,8],[7,8]]);
         }
         else if (loadExample === 1)
         {
-          this._mainGraph.addNodesFrom([1,2,3,4,5], {color: 'blue'});
-          this._mainGraph.addNodesFrom([9], {color: '#008A00'});
-          this._mainGraph.addCycle([1,2,3,4,5]);
-          this._mainGraph.addEdgesFrom([[1,9], [9,1]]);
+          this._mainGraph.addNodesFrom([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], {color: 'blue'});
+          this._mainGraph.addEdgesFrom([[1,2],[2,3],[4,5],[5,6],[7,8],[8,9],[3,10],[6,10],
+          [9,12],[10,11],[12,13],[11,14],[13,14],[14,15]]);
         }
         else if (loadExample === 2)
         {
           // #2: NetworkX example graph
-          // Main graph would need to be changed to jsnx.Graph();
-          this._mainGraph.addNodesFrom([1,2,3,4], {group:0});
-          this._mainGraph.addNodesFrom([5,6,7], {group:1});
-          this._mainGraph.addNodesFrom([8,9,10,11], {group:2});
-           
-          this._mainGraph.addPath([1,2,5,6,7,8,11]);
-          this._mainGraph.addEdgesFrom([[1,3],[1,4],[3,4],[2,3],[2,4],[8,9],[8,10],[9,10],[11,10],[11,9]]);
+		  // Main graph would need to be changed to jsnx.Graph();
+		  var nodes = [];
+		  for (var i=1; i<43; i++){
+			  nodes.push(i);
+		  }
+
+          this._mainGraph.addNodesFrom(nodes, {group:0});
+		  this._mainGraph.addEdgesFrom([[1,2],[2,3],[4,5],[5,6],[7,8],[8,9],
+			[10,11],[11,12],[13,14],[14,15],[16,17],[17,18],[19,20],[20,21],[22,23],[23,24],
+			[3,25],[6,25],[9,25],[12,26],[15,26],[18,27],[21,27],[24,27],
+			 [25,28],[26,29],[26,30],[27,31],[27,32],[27,33],[28,35],[29,35],[30,34],[31,34],[32,37],[33,38],
+			[35,36],[34,40],[38,39],[36,40],[39,40],[40,41],[40,42]]);
         }
 
         //d3.select("svg.jsnx").selectAll("g.node").on('mouseenter', function(d) {
@@ -124,9 +131,8 @@ qx.Class.define("qxapp.wrappers.JSNetworkX", {
         const getAllInfo = true;
         var nodes = this._mainGraph.nodes(getAllInfo);
         for (let i = 0; i < nodes.length; i++) {
-          // nodes[i][1].color = 'green'; //doesn't work/update
           var oldNode = nodes[i][0];
-          this._mainGraph.addNodesFrom([oldNode], {color: 'green'});
+          this._mainGraph.addNodesFrom([oldNode], {color: 'red'});
         }
       },
 
@@ -139,6 +145,29 @@ qx.Class.define("qxapp.wrappers.JSNetworkX", {
           this._mainGraph.addNodesFrom([oldNode], {color: 'red'});
         }
       },
+
+      UpdatePipeline : function(data)
+      {
+        const getAllInfo = true;
+        var nodes = this._mainGraph.nodes(getAllInfo);
+        if (data.length != nodes.length){
+          return;
+        }
+
+        for (let i = 0; i < nodes.length; i++) {
+          var oldNode = nodes[i][0];
+          if (data[i] == -1)          {
+            this._mainGraph.addNodesFrom([oldNode], {color: 'red'});
+          } else if(data[i] < 1.0) {
+            this._mainGraph.addNodesFrom([oldNode], {color: 'orange'});
+          }
+          else{
+            this._mainGraph.addNodesFrom([oldNode], {color: 'green'});
+            
+          }
+        }
+      },
+
     },
   
     /**
