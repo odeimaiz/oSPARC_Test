@@ -71,29 +71,23 @@ qx.Class.define("qxapp.wrappers.jqueryFlowchart", {
         CreateEmptyCanvas: function(canvasId)
         {
             this._canvasId = canvasId;
+            
             this._fillEmptyWorkbench();
 
-            var self = this;
-            $(document).ready( init );
-            function init() {
-                // Apply the plugin on a standard, empty div...
-                var $operatorTitle = $('#operator_title');
-                var $flowchart = $('#'+this._canvasId);
-                $flowchart.flowchart({
-                    data: self._workbenchData,
-                    multipleLinksOnOutput: true,
-                    multipleLinksOnInput: true,
-                    onOperatorSelect: function(operatorId) {
-                        $operatorTitle.val($flowchart.flowchart('getOperatorTitle', operatorId));
-                        self._nodeSelected(operatorId);
-                        return true;
-                    },
-                    onOperatorUnselect: function() {
-                        self._nodeUnselected();
-                        return true;
-                    },
-                });
-            };
+            // Apply the plugin on a standard, empty div...
+            var $operatorTitle = $('#operator_title');
+            var $flowchart = $('#' + this._canvasId);
+            var that = this;
+            $flowchart.flowchart({
+                data: that._workbenchData,
+                multipleLinksOnOutput: true,
+                multipleLinksOnInput: true,
+                onOperatorSelect: function (operatorId) {
+                    $operatorTitle.val($flowchart.flowchart('getOperatorTitle', operatorId));
+                    that._nodeSelected(operatorId);
+                    return true;
+                },
+            });
         },
 
         _fillEmptyWorkbench: function () {
@@ -148,11 +142,9 @@ qx.Class.define("qxapp.wrappers.jqueryFlowchart", {
                     },
                 }
             };
-
-            var $flowchart = $('#'+this._canvasId);
-            $flowchart.flowchart({
-                data: this._workbenchData,
-            });
+            
+            var $flowchart = $('#' + this._canvasId);
+            $flowchart.flowchart('setData', this._workbenchData);
 
             /*
             //d3.select("svg.jsnx").selectAll("g.node").on('mouseenter', function(d) {
@@ -162,83 +154,68 @@ qx.Class.define("qxapp.wrappers.jqueryFlowchart", {
             //d3.select("svg.jsnx").selectAll("g.node").on('mouseover', function(d) {
                 //  console.log('mouseover', d);
             //});
-    
-            var that = this;
-            d3.select("svg.jsnx").selectAll("g.node").on('click', function(d) {
-                that.fireDataEvent("NodeClicked", d);
-            }, that);
-        
-            d3.select('svg.jsnx').on('dblclick.zoom', function(d) {
-                that.fireEvent("DoubleClicked");
-            }, that);
             */
         },
 
-      StartPipeline : function()
-      {
-        const getAllInfo = true;
-        var nodes = this._mainGraph.nodes(getAllInfo);
-        for (let i = 0; i < nodes.length; i++) {
-          var oldNode = nodes[i][0];
-          this._mainGraph.addNodesFrom([oldNode], {color: 'red'});
-        }
-      },
-
-      StopPipeline : function()
-      {
-        const getAllInfo = true;
-        var nodes = this._mainGraph.nodes(getAllInfo);
-        for (let i = 0; i < nodes.length; i++) {
-          var oldNode = nodes[i][0];
-          this._mainGraph.addNodesFrom([oldNode], {color: 'red'});
-        }
-      },
-
-      UpdatePipeline : function(data)
-      {
-        const getAllInfo = true;
-        var nodes = this._mainGraph.nodes(getAllInfo);
-        if (data.length != nodes.length){
-          return;
-        }
-
-        for (let i = 0; i < nodes.length; i++) {
-          var oldNode = nodes[i][0];
-          if (data[i] == -1)          {
-            this._mainGraph.addNodesFrom([oldNode], {color: 'red'});
-          } else if(data[i] < 1.0) {
-            this._mainGraph.addNodesFrom([oldNode], {color: 'orange'});
-          }
-          else{
-            this._mainGraph.addNodesFrom([oldNode], {color: 'green'});
-            
-          }
-        }
-      },
-
-        _nodeSelected: function(operatorId) {
-            if (operatorId in this._workbenchData.operators) {
-                this.fireDataEvent("serviceSelected", this._workbenchData.operators[operatorId].service.id);
+        StartPipeline: function () {
+            const getAllInfo = true;
+            var nodes = this._mainGraph.nodes(getAllInfo);
+            for (let i = 0; i < nodes.length; i++) {
+                var oldNode = nodes[i][0];
+                this._mainGraph.addNodesFrom([oldNode], { color: 'red' });
             }
         },
-  
-        _nodeUnselected: function() {
-            this.fireDataEvent("serviceUnselected");
+
+        StopPipeline: function () {
+            const getAllInfo = true;
+            var nodes = this._mainGraph.nodes(getAllInfo);
+            for (let i = 0; i < nodes.length; i++) {
+                var oldNode = nodes[i][0];
+                this._mainGraph.addNodesFrom([oldNode], { color: 'red' });
+            }
         },
-  
-      /**
-        * Simple css loader without event support
-        */
-      _addCss: function(url) {
-        var head = document.getElementsByTagName("head")[0];
-        var el = document.createElement("link");
-        el.type = "text/css";
-        el.rel = "stylesheet";
-        el.href = qx.util.ResourceManager.getInstance().toUri(url);
-        setTimeout(function() {
-          head.appendChild(el);
-        }, 0);
-      }
+
+        UpdatePipeline: function (data) {
+            const getAllInfo = true;
+            var nodes = this._mainGraph.nodes(getAllInfo);
+            if (data.length != nodes.length) {
+                return;
+            }
+
+            for (let i = 0; i < nodes.length; i++) {
+                var oldNode = nodes[i][0];
+                if (data[i] == -1) {
+                    this._mainGraph.addNodesFrom([oldNode], { color: 'red' });
+                } else if (data[i] < 1.0) {
+                    this._mainGraph.addNodesFrom([oldNode], { color: 'orange' });
+                }
+                else {
+                    this._mainGraph.addNodesFrom([oldNode], { color: 'green' });
+
+                }
+            }
+        },
+
+        _nodeSelected: function(operatorId) {
+            console.log('operatorId: ', operatorId);
+            if (operatorId in this._workbenchData.operators) {                
+                this.fireDataEvent("NodeClicked", this._workbenchData.operators[operatorId]);
+            }
+        },
+
+        /**
+          * Simple css loader without event support
+          */
+        _addCss: function (url) {
+            var head = document.getElementsByTagName("head")[0];
+            var el = document.createElement("link");
+            el.type = "text/css";
+            el.rel = "stylesheet";
+            el.href = qx.util.ResourceManager.getInstance().toUri(url);
+            setTimeout(function () {
+                head.appendChild(el);
+            }, 0);
+        }
     },
   
     /**
