@@ -25,6 +25,7 @@ qx.Class.define("qxapp.wrappers.jqueryFlowchart", {
         var jquery_ui_css_path = "../resource/jquery/jquery-ui-1.12.1" + min + ".css";
         var flowchart_path = "../resource/jquery-flowchart/jquery.flowchart" + min + ".js";
         var flowchart_css_path = "../resource/jquery-flowchart/jquery.flowchart" + min + ".css";
+        var flowchart_z43_css_path = "../resource/jquery-flowchart/jquery.flowchart.z43" + min + ".css";
         var dynLoader = new qx.util.DynamicScriptLoader([
             jquery_path,
             jquery_ui_path,
@@ -32,6 +33,7 @@ qx.Class.define("qxapp.wrappers.jqueryFlowchart", {
         ]);
         this._addCss(jquery_ui_css_path);
         this._addCss(flowchart_css_path);
+        this._addCss(flowchart_z43_css_path);
       
         dynLoader.addListenerOnce('ready', function(e) {
             console.log(flowchart_path + " loaded");

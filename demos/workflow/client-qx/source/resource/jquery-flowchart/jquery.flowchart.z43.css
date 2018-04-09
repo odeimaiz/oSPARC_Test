@@ -1,0 +1,54 @@
+
+
+.flowchart-operator {
+    width: 200px;
+}
+
+.flowchart-operator .flowchart-operator-expand {
+    width: 15%;
+    height: 29px;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #DDDDDD;
+    background: #F0F0F0;
+    overflow: hidden;
+    float: left;
+    display: block;
+    cursor: pointer;
+}
+
+.flowchart-operator .flowchart-operator-title {
+    width: 55%;
+    float: left;
+}
+
+.flowchart-operator .flowchart-operator-button {
+    width: 15%;
+    height: 29px; /* font-size: small; */
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #DDDDDD;
+    background: #F0F0F0;
+    overflow: hidden;
+    float: left;
+    display: block;
+    cursor: pointer;
+}
+
+.flowchart-operator .flowchart-operator-progress {
+    width: 95%;
+    height: 29px;
+    margin: 5px;
+    background: #00FF00;
+    text-overflow: ellipsis;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: small;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
