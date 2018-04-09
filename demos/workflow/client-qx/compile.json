@@ -48,6 +48,9 @@
       },
       {
         "uri" : "resource/jquery-flowchart/*.css"
+      },
+      {
+        "uri" : "resource/jquery-flowchart/images/*"
       }
     ]
   }
