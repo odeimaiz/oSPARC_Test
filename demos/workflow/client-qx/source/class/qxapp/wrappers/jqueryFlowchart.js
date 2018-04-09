@@ -88,6 +88,10 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
           that._nodeSelected(operatorId);
           return true;
         },
+        onOperatorAction: function(operatorId, actionId) {
+          that._nodeActionPressed(operatorId, actionId);
+          return true;
+        },
       });
     },
 
@@ -195,9 +199,15 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
     },
 
     _nodeSelected: function(operatorId) {
-      console.log('operatorId: ', operatorId);
       if (operatorId in this._workbenchData.operators) {
+        console.log('_nodeSelected: ', operatorId);
         this.fireDataEvent('NodeClicked', this._workbenchData.operators[operatorId]);
+      }
+    },
+
+    _nodeActionPressed: function(operatorId, actionId) {
+      if (operatorId in this._workbenchData.operators) {
+        console.log('_nodeActionPressed: ', operatorId, actionId);
       }
     },
 

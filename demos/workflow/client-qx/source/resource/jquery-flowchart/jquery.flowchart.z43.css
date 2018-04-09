@@ -4,19 +4,6 @@
     width: 200px;
 }
 
-.flowchart-operator .flowchart-operator-expand {
-    width: 15%;
-    height: 29px;
-    padding: 5px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #DDDDDD;
-    background: #F0F0F0;
-    overflow: hidden;
-    float: left;
-    display: block;
-    cursor: pointer;
-}
-
 .flowchart-operator .flowchart-operator-title {
     width: 55%;
     float: left;
