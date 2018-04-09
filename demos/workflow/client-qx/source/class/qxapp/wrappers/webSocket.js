@@ -5,86 +5,86 @@
  * @ignore(io)
  */
 
-qx.Class.define("qxapp.wrappers.webSocket", {
+qx.Class.define('qxapp.wrappers.webSocket', {
   extend: qx.core.Object,
 
-  //Socket.io events
+  // Socket.io events
   events: {
     /** socket.io connect event */
-    "connect": "qx.event.type.Event",
+    'connect': 'qx.event.type.Event',
     /** socket.io connecting event */
-    "connecting": "qx.event.type.Data",
+    'connecting': 'qx.event.type.Data',
     /** socket.io connect_failed event */
-    "connect_failed": "qx.event.type.Event",
+    'connect_failed': 'qx.event.type.Event',
     /** socket.io message event */
-    "message": "qx.event.type.Data",
+    'message': 'qx.event.type.Data',
     /** socket.io close event */
-    "close": "qx.event.type.Data",
+    'close': 'qx.event.type.Data',
     /** socket.io disconnect event */
-    "disconnect": "qx.event.type.Event",
+    'disconnect': 'qx.event.type.Event',
     /** socket.io reconnect event */
-    "reconnect": "qx.event.type.Data",
+    'reconnect': 'qx.event.type.Data',
     /** socket.io reconnecting event */
-    "reconnecting": "qx.event.type.Data",
+    'reconnecting': 'qx.event.type.Data',
     /** socket.io reconnect_failed event */
-    "reconnect_failed": "qx.event.type.Event",
+    'reconnect_failed': 'qx.event.type.Event',
     /** socket.io error event */
-    "error": "qx.event.type.Data"
+    'error': 'qx.event.type.Data',
   },
 
   properties: {
     libReady: {
       nullable: false,
       init: false,
-      check: "Boolean"
+      check: 'Boolean',
     },
 
     url: {
       nullable: false,
-      init: "http://".concat(window.location.hostname),
-      check: "String"
+      init: 'http://'.concat(window.location.hostname),
+      check: 'String',
     },
     /** The port used to connect */
     port: {
       nullable: false,
       init: Number(window.location.port),
-      check: "Number"
+      check: 'Number',
     },
     /** The namespace (socket.io namespace), can be empty */
     namespace: {
       nullable: true,
-      init: "",
-      check: "String"
+      init: '',
+      check: 'String',
     },
     /** The socket (socket.io), can be null */
     socket: {
       nullable: true,
       init: null,
-      check: "Object"
+      check: 'Object',
     },
     /** Parameter for socket.io indicating if we should reconnect or not */
     reconnect: {
       nullable: true,
       init: true,
-      check: "Boolean"
+      check: 'Boolean',
     },
     connectTimeout: {
       nullable: true,
       init: 10000,
-      check: "Number"
+      check: 'Number',
     },
     /** Reconnection delay for socket.io. */
     reconnectionDelay: {
       nullable: false,
       init: 500,
-      check: "Number"
+      check: 'Number',
     },
     /** Max reconnection attemps */
     maxReconnectionAttemps: {
       nullable: false,
       init: 1000,
-      check: "Number"
-    }
+      check: 'Number',
+    },
   },
 
   /** Constructor
@@ -101,7 +101,7 @@ qx.Class.define("qxapp.wrappers.webSocket", {
   },
 
   members: {
-    //The name store an array of events
+    // The name store an array of events
     __name: null,
 
     /**
@@ -110,13 +110,13 @@ qx.Class.define("qxapp.wrappers.webSocket", {
     connect: function() {
 
       // initialize the script loading
-      var socket_io_path = "../resource/socketio/socket.io.js";
-      var dynLoader = new qx.util.DynamicScriptLoader([
-        socket_io_path
+      let socket_io_path = '../resource/socketio/socket.io.js';
+      let dynLoader = new qx.util.DynamicScriptLoader([
+        socket_io_path,
       ]);
 
       dynLoader.addListenerOnce('ready', function(e) {
-        console.log(socket_io_path + " loaded");
+        console.log(socket_io_path + ' loaded');
         this.setLibReady(true);
 
 
@@ -125,47 +125,47 @@ qx.Class.define("qxapp.wrappers.webSocket", {
           this.getSocket().disconnect();
         }
 
-        var dir = this.getUrl() + ':' + this.getPort();
+        let dir = this.getUrl() + ':' + this.getPort();
         console.log('socket in', dir);
-        var mySocket = io.connect(dir, {
+        let mySocket = io.connect(dir, {
           'port': this.getPort(),
           'reconnect': this.getReconnect(),
           'connect timeout': this.getConnectTimeout(),
           'reconnection delay': this.getReconnectionDelay(),
           'max reconnection attempts': this.getMaxReconnectionAttemps(),
-          'force new connection': true
+          'force new connection': true,
         });
         this.setSocket(mySocket);
 
-        this.on("connect", function() {
-          this.fireEvent("connect");
+        this.on('connect', function() {
+          this.fireEvent('connect');
         }, this);
-        this.on("connecting", function(e) {
-          this.fireDataEvent("connecting", e);
+        this.on('connecting', function(e) {
+          this.fireDataEvent('connecting', e);
         }, this);
-        this.on("connect_failed", function() {
-          this.fireEvent("connect_failed");
+        this.on('connect_failed', function() {
+          this.fireEvent('connect_failed');
         }, this);
-        this.on("message", function(e) {
-          this.fireDataEvent("message", e);
+        this.on('message', function(e) {
+          this.fireDataEvent('message', e);
         }, this);
-        this.on("close", function(e) {
-          this.fireDataEvent("close", e);
+        this.on('close', function(e) {
+          this.fireDataEvent('close', e);
         }, this);
-        this.on("disconnect", function() {
-          this.fireEvent("disconnect");
+        this.on('disconnect', function() {
+          this.fireEvent('disconnect');
         }, this);
-        this.on("reconnect", function(e) {
-          this.fireDataEvent("reconnect", e);
+        this.on('reconnect', function(e) {
+          this.fireDataEvent('reconnect', e);
         }, this);
-        this.on("reconnecting", function(e) {
-          this.fireDataEvent("reconnecting", e);
+        this.on('reconnecting', function(e) {
+          this.fireDataEvent('reconnecting', e);
         }, this);
-        this.on("reconnect_failed", function() {
-          this.fireEvent("reconnect_failed");
+        this.on('reconnect_failed', function() {
+          this.fireEvent('reconnect_failed');
         }, this);
-        this.on("error", function(e) {
-          this.fireDataEvent("error", e);
+        this.on('error', function(e) {
+          this.fireDataEvent('error', e);
         }, this);
       }, this);
 
@@ -179,7 +179,7 @@ qx.Class.define("qxapp.wrappers.webSocket", {
      * @param jsonObject {object} The JSON object to send to socket.io as parameters
      */
     emit: function(name, jsonObject) {
-      console.log("emit", name);
+      console.log('emit', name);
       this.getSocket().emit(name, jsonObject);
     },
 
@@ -192,7 +192,7 @@ qx.Class.define("qxapp.wrappers.webSocket", {
      */
     on: function(name, fn, that) {
       this.__name.push(name);
-      if (typeof(that) !== "undefined" && that !== null) {
+      if (typeof(that) !== 'undefined' && that !== null) {
         this.getSocket().on(name, qx.lang.Function.bind(fn, that));
       } else {
         this.getSocket().on(name, fn);
@@ -200,13 +200,13 @@ qx.Class.define("qxapp.wrappers.webSocket", {
     },
 
     slotExists: function(name) {
-      for (var i = 0; i < this.__name.length; ++i) {
+      for (let i = 0; i < this.__name.length; ++i) {
         if (this.__name[i] === name) {
           return true;
         }
       }
       return false;
-    }
+    },
   },
 
   /**
@@ -214,9 +214,9 @@ qx.Class.define("qxapp.wrappers.webSocket", {
    */
   destruct: function() {
     if (this.getSocket() != null) {
-      //Deleting listeners
+      // Deleting listeners
       if (this.__name !== null && this.__name.length >= 1) {
-        for (var i = 0; i < this.__name.length; ++i) {
+        for (let i = 0; i < this.__name.length; ++i) {
           this.getSocket().removeAllListeners(this.__name[i]);
         }
       }
@@ -224,7 +224,7 @@ qx.Class.define("qxapp.wrappers.webSocket", {
 
       this.removeAllBindings();
 
-      //Disconnecting socket.io
+      // Disconnecting socket.io
       try {
         this.getSocket().socket.disconnect();
       } catch (e) {}
@@ -233,16 +233,16 @@ qx.Class.define("qxapp.wrappers.webSocket", {
         this.getSocket().disconnect();
       } catch (e) {}
 
-      this.getSocket().removeAllListeners("connect");
-      this.getSocket().removeAllListeners("connecting");
-      this.getSocket().removeAllListeners("connect_failed");
-      this.getSocket().removeAllListeners("message");
-      this.getSocket().removeAllListeners("close");
-      this.getSocket().removeAllListeners("disconnect");
-      this.getSocket().removeAllListeners("reconnect");
-      this.getSocket().removeAllListeners("reconnecting");
-      this.getSocket().removeAllListeners("reconnect_failed");
-      this.getSocket().removeAllListeners("error");
+      this.getSocket().removeAllListeners('connect');
+      this.getSocket().removeAllListeners('connecting');
+      this.getSocket().removeAllListeners('connect_failed');
+      this.getSocket().removeAllListeners('message');
+      this.getSocket().removeAllListeners('close');
+      this.getSocket().removeAllListeners('disconnect');
+      this.getSocket().removeAllListeners('reconnect');
+      this.getSocket().removeAllListeners('reconnecting');
+      this.getSocket().removeAllListeners('reconnect_failed');
+      this.getSocket().removeAllListeners('error');
     }
-  }
+  },
 });
