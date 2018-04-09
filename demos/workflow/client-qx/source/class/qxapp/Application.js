@@ -54,9 +54,12 @@ qx.Class.define("qxapp.Application", {
       this._socket = new qxapp.wrappers.webSocket('app');
       this._socket.connect();
 
+      const appWidth = 800;
+
       // WORKBENCH
       var toolbar = new qx.ui.toolbar.ToolBar();
       toolbar.setSpacing(5);
+      toolbar.setWidth(appWidth);
 
       var current_pipeline = -1
 
@@ -208,7 +211,7 @@ qx.Class.define("qxapp.Application", {
       });
 
       // add workflow View
-      this._workflowView = new qxapp.components.workflowView(575, 425);
+      this._workflowView = new qxapp.components.workflowView(appWidth, 425);
       doc.add(this._workflowView, {
         left: 20,
         top: 70
@@ -218,7 +221,7 @@ qx.Class.define("qxapp.Application", {
       var logLabel = new qx.ui.basic.Label("Logger:");
       var textarea = new qx.ui.form.TextArea(" ");
 
-      textarea.setWidth(575);
+      textarea.setWidth(appWidth);
       textarea.setHeight(200);
       textarea.setReadOnly(true);
 
