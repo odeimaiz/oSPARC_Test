@@ -108,15 +108,14 @@ qx.Class.define('qxapp.wrappers.webSocket', {
      * Trying to using socket.io to connect and plug every event from socket.io to qooxdoo one
      */
     connect: function() {
-
       // initialize the script loading
-      let socket_io_path = '../resource/socketio/socket.io.js';
+      let socketIOPath = '../resource/socketio/socket.io.js';
       let dynLoader = new qx.util.DynamicScriptLoader([
-        socket_io_path,
+        socketIOPath,
       ]);
 
       dynLoader.addListenerOnce('ready', function(e) {
-        console.log(socket_io_path + ' loaded');
+        console.log(socketIOPath + ' loaded');
         this.setLibReady(true);
 
 
