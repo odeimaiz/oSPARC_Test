@@ -28,24 +28,25 @@ qx.Class.define('qxapp.components.workflowView',
         this._workflowLibWrapper = new qxapp.wrappers.jqueryFlowchart();
       }
 
+      let scope = this;
       this._workflowLibWrapper.addListener(('workflowLibReady'), function(e) {
         let ready = e.getData();
         if (ready) {
-          this._workflowView = new qx.ui.core.Widget();
-          this.add(this._workflowView, {flex: 1});
+          scope._workflowView = new qx.ui.core.Widget();
+          scope.add(scope._workflowView, {flex: 1});
           const canvasId = 'workflowCanvas';
-          this._workflowView.getContentElement().setAttribute('id', canvasId);
-          this._workflowView.getContentElement().setAttribute('height', height + 'px');
-          this._workflowView.getContentElement().setAttribute('width', width + 'px');
+          scope._workflowView.getContentElement().setAttribute('id', canvasId);
+          scope._workflowView.getContentElement().setAttribute('height', height + 'px');
+          scope._workflowView.getContentElement().setAttribute('width', width + 'px');
 
-          this._workflowView.addListenerOnce('appear', function() {
-            this._workflowLibWrapper.CreateEmptyCanvas(canvasId);
-            // this._workflowView.getContentElement().getDomElement().appendChild(this._networksxWrapper.GetDomElement());
-          }, this);
+          scope._workflowView.addListenerOnce('appear', function() {
+            scope._workflowLibWrapper.CreateEmptyCanvas(canvasId);
+            // scope._workflowView.getContentElement().getDomElement().appendChild(scope._networksxWrapper.GetDomElement());
+          }, scope);
         } else {
           console.log('JSNetworkX.js was not loaded');
         }
-      }, this);
+      }, scope);
     },
 
     events: {
