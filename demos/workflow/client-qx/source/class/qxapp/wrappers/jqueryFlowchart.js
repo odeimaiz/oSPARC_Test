@@ -35,12 +35,13 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
     this._addCss(flowchartCssPath);
     this._addCss(flowchartZ43CssPath);
 
+    let scope = this;
     dynLoader.addListenerOnce('ready', function(e) {
       console.log(flowchartPath + ' loaded');
-      this.setLibReady(true);
+      scope.setLibReady(true);
 
-      this.fireDataEvent('workflowLibReady', true);
-    }, this);
+      scope.fireDataEvent('workflowLibReady', true);
+    }, scope);
 
     dynLoader.addListener('failed', function(e) {
       let data = e.getData();
@@ -84,6 +85,9 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
         multipleLinksOnOutput: true,
         multipleLinksOnInput: true,
         onOperatorSelect: function(operatorId) {
+          if (operatorId === undefined) {
+            return false;
+          }
           $operatorTitle.val($flowchart.flowchart('getOperatorTitle', operatorId));
           that._nodeSelected(operatorId);
           return true;
@@ -118,6 +122,12 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
                   label: 'Output 1',
                 },
               },
+              extra: {
+                expanded: false,
+                running: 0,
+                info: 'This is Operator 1.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                progress: 100,
+              },
             },
           },
           operator2: {
@@ -134,6 +144,12 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
                 },
               },
               outputs: {},
+              extra: {
+                expanded: false,
+                running: 0,
+                info: 'This is Operator 2.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                progress: 100,
+              },
             },
           },
         },
@@ -149,16 +165,6 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
 
       let $flowchart = $('#' + this._canvasId);
       $flowchart.flowchart('setData', this._workbenchData);
-
-      /*
-      //d3.select("svg.jsnx").selectAll("g.node").on('mouseenter', function(d) {
-          //  console.log('mouseenter', d);
-      //});
-
-      //d3.select("svg.jsnx").selectAll("g.node").on('mouseover', function(d) {
-          //  console.log('mouseover', d);
-      //});
-      */
     },
 
     StartPipeline: function() {
@@ -207,8 +213,58 @@ qx.Class.define('qxapp.wrappers.jqueryFlowchart', {
 
     _nodeActionPressed: function(operatorId, actionId) {
       if (operatorId in this._workbenchData.operators) {
-        console.log('_nodeActionPressed: ', operatorId, actionId);
+        switch (actionId) {
+          case 'arrow-button':
+            this._nodeArrowPressed(operatorId);
+            break;
+          case 'play-button':
+            this._nodePlayPressed(operatorId);
+            break;
+          case 'info-button':
+            this._nodeInfoPressed(operatorId);
+            break;
+          default:
+            break;
+        }
       }
+    },
+
+    _nodeArrowPressed: function(operatorId) {
+      let $flowchart = $('#' + this._canvasId);
+      let operatorData = $flowchart.flowchart('getOperatorData', operatorId);
+      if (operatorData.properties.extra.expanded) {
+        this._collapseNode(operatorId);
+      } else {
+        this._expandNode(operatorId);
+      }
+    },
+
+    _collapseNode: function(operatorId) {
+      console.log('Collapse:', operatorId);
+      let $flowchart = $('#' + this._canvasId);
+      let operatorData = $flowchart.flowchart('getOperatorData', operatorId);
+      operatorData.properties.extra.expanded = false;
+      $flowchart.flowchart('setOperatorData', operatorId, operatorData);
+      console.log('operatorData: ', operatorData);
+    },
+
+    _expandNode: function(operatorId) {
+      console.log('Expand:', operatorId);
+      let $flowchart = $('#' + this._canvasId);
+      let operatorData = $flowchart.flowchart('getOperatorData', operatorId);
+      operatorData.properties.extra.expanded = true;
+      $flowchart.flowchart('setOperatorData', operatorId, operatorData);
+      console.log('operatorData: ', operatorData);
+    },
+
+    _nodePlayPressed: function(operatorId) {
+      console.log('Run Computational Service:', operatorId);
+    },
+
+    _nodeInfoPressed: function(operatorId) {
+      let $flowchart = $('#' + this._canvasId);
+      let operatorData = $flowchart.flowchart('getOperatorData', operatorId);
+      alert(operatorData.properties.extra.info);
     },
 
     _addCss: function(url) {
