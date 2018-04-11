@@ -147,6 +147,12 @@ $(function () {
                 }
             });
 
+            this.objs.layers.operators.on('click', '.flowchart-operator-button', function(e) {
+                if ($(e.target).closest('.flowchart-operator-connector').length == 0) {
+                    self.selectAction($(this).parent().data('operator_id'), e.target.id);
+                }
+            });
+
             this.objs.layers.operators.on('click', '.flowchart-operator-connector', function () {
                 var $this = $(this);
                 if (self.options.canUserEditLinks) {
@@ -471,9 +477,29 @@ $(function () {
             var $operator = $('<div class="flowchart-operator"></div>');
             $operator.addClass(infos.class);
 
+            if (infos.extra.expanded) {
+                $operator.toggleClass('flowchart-operator-expanded');
+            }
+
+            let $operatorTitleArrow = $('<div class="flowchart-operator-button"></div>');
+            if (infos.extra.expanded) {
+                $operatorTitleArrow.prepend('<img id="arrow-button" src="../resource/jquery-flowchart/images/down-arrow.svg" />');
+            } else {
+                $operatorTitleArrow.prepend('<img id="arrow-button" src="../resource/jquery-flowchart/images/right-arrow.svg" />');
+            }
+            $operatorTitleArrow.appendTo($operator);
+
             var $operator_title = $('<div class="flowchart-operator-title"></div>');
             $operator_title.html(infos.title);
             $operator_title.appendTo($operator);
+
+            let $operatorTitlePlayButton = $('<div class="flowchart-operator-button"></div>');
+            $operatorTitlePlayButton.prepend('<img id="play-button" src="../resource/jquery-flowchart/images/play-button.svg" />');
+            $operatorTitlePlayButton.appendTo($operator);
+
+            let $operatorIitleInfoButton = $('<div class="flowchart-operator-button"></div>');
+            $operatorIitleInfoButton.prepend('<img id="info-button" src="../resource/jquery-flowchart/images/info-button.svg" />');
+            $operatorIitleInfoButton.appendTo($operator);
 
             var $operator_inputs_outputs = $('<div class="flowchart-operator-inputs-outputs"></div>');
 
@@ -484,6 +510,10 @@ $(function () {
 
             var $operator_outputs = $('<div class="flowchart-operator-outputs"></div>');
             $operator_outputs.appendTo($operator_inputs_outputs);
+
+            let $operatorProgress = $('<div class="flowchart-operator-progress"></div>');
+            $operatorProgress.html('100%');
+            $operatorProgress.appendTo($operator);
 
             var self = this;
 
@@ -761,6 +791,12 @@ $(function () {
             this._removeSelectedClassOperators();
             this._addSelectedClass(operatorId);
             this.selectedOperatorId = operatorId;
+        },
+
+        selectAction: function (operatorId, actionId) {
+            if (!this.callbackEvent('operatorAction', [operatorId, actionId])) {
+                return;
+            }
         },
 
         addClassOperator: function (operatorId, className) {
