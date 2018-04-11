@@ -4,6 +4,10 @@
     width: 200px;
 }
 
+.flowchart-operator-expanded {
+    height: 500px;
+}
+
 .flowchart-operator .flowchart-operator-title {
     width: 55%;
     float: left;
