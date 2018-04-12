@@ -8,54 +8,6 @@ qx.Class.define('qxapp.wrappers.threeWrapper',
   extend: qx.core.Object,
 
   construct: function() {
-    // initialize the script loading
-    let threePath = 'three/three.min.js';
-    let orbitPath = 'three/OrbitControls.js';
-    let transformPath = 'three/TransformControls.js';
-    let gltfLoaderPath = 'three/GLTFLoader.js';
-    let gltfExporterPath = 'three/GLTFExporter.js';
-    let dynLoader = new qx.util.DynamicScriptLoader([
-      threePath,
-      orbitPath,
-      transformPath,
-      gltfLoaderPath,
-      gltfExporterPath,
-    ]);
-
-    let scope = this;
-    dynLoader.addListenerOnce('ready', function(e) {
-      console.log(threePath + ' loaded');
-      scope.setLibReady(true);
-
-      scope._scene = new THREE.Scene();
-
-      scope._camera = new THREE.PerspectiveCamera();
-      scope._camera.far = 10000;
-      scope._camera.up.set(0, 0, 1);
-      scope._scene.add(scope._camera);
-
-      scope._addCameraLight();
-      scope._addGridHelper();
-      scope._addAxesHelper();
-
-      scope._mouse = new THREE.Vector2();
-      scope._raycaster = new THREE.Raycaster();
-
-      scope._renderer = new THREE.WebGLRenderer();
-
-      scope._addOrbitControls();
-      scope.Render();
-
-      scope.fireDataEvent('ThreeLibReady', true);
-    }, scope);
-
-    dynLoader.addListener('failed', function(e) {
-      let data = e.getData();
-      console.log('failed to load ' + data.script);
-      scope.fireDataEvent('ThreeLibReady', false);
-    }, scope);
-
-    dynLoader.start();
   },
 
   properties: {
@@ -80,6 +32,57 @@ qx.Class.define('qxapp.wrappers.threeWrapper',
     _renderer: null,
     _orbitControls: null,
     _mouse: null,
+
+    Init: function() {
+      // initialize the script loading
+      let threePath = 'three/three.min.js';
+      let orbitPath = 'three/OrbitControls.js';
+      let transformPath = 'three/TransformControls.js';
+      let gltfLoaderPath = 'three/GLTFLoader.js';
+      let gltfExporterPath = 'three/GLTFExporter.js';
+      let dynLoader = new qx.util.DynamicScriptLoader([
+        threePath,
+        orbitPath,
+        transformPath,
+        gltfLoaderPath,
+        gltfExporterPath,
+      ]);
+
+      let scope = this;
+      dynLoader.addListenerOnce('ready', function(e) {
+        console.log(threePath + ' loaded');
+        scope.setLibReady(true);
+
+        scope._scene = new THREE.Scene();
+
+        scope._camera = new THREE.PerspectiveCamera();
+        scope._camera.far = 10000;
+        scope._camera.up.set(0, 0, 1);
+        scope._scene.add(scope._camera);
+
+        scope._addCameraLight();
+        scope._addGridHelper();
+        scope._addAxesHelper();
+
+        scope._mouse = new THREE.Vector2();
+        scope._raycaster = new THREE.Raycaster();
+
+        scope._renderer = new THREE.WebGLRenderer();
+
+        scope._addOrbitControls();
+        scope.Render();
+
+        scope.fireDataEvent('ThreeLibReady', true);
+      }, scope);
+
+      dynLoader.addListener('failed', function(e) {
+        let data = e.getData();
+        console.log('failed to load ' + data.script);
+        scope.fireDataEvent('ThreeLibReady', false);
+      }, scope);
+
+      dynLoader.start();
+    },
 
     GetDomElement: function() {
       return this._renderer.domElement;
