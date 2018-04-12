@@ -27,8 +27,8 @@ qx.Class.define('qxapp.Application',
 
   members:
   {
-    _threeView: null,
-    _entityList: null,
+    _socket: null,
+    _layoutManager: null,
 
     /**
      * This method contains the initial application code and gets called
@@ -64,19 +64,8 @@ qx.Class.define('qxapp.Application',
       this._socket = new qxapp.wrappers.webSocket('app');
       this._socket.connect();
 
-      let body = document.body;
-      let html = document.documentElement;
-
-      this._workbench = new qxapp.components.workbench();
-      doc.add(this._workbench);
-
-
-      let docWidth = Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
-      let docHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
-      this._threeView = new qxapp.components.threeView(docWidth, docHeight, '#3F3F3F');
-  
-      // components to document
-      doc.add(this._threeView);
+      this._layoutManager = new qxapp.layout.layoutManager();
+      doc.add(this._layoutManager);
     },
   },
 });
