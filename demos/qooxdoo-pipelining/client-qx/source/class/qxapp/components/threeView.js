@@ -15,15 +15,9 @@ qx.Class.define('qxapp.components.threeView',
       height: height,
     });
 
-    let box = new qx.ui.layout.VBox();
-    box.set({
-      spacing: 10,
-      alignX: 'center',
-      alignY: 'middle',
-    });
-
+    let canvas = new qx.ui.layout.Canvas();
     this.set({
-      layout: box,
+      layout: canvas,
     });
 
     this._threeWrapper = new qxapp.wrappers.threeWrapper();
@@ -33,7 +27,9 @@ qx.Class.define('qxapp.components.threeView',
       let ready = e.getData();
       if (ready) {
         scope._threeDViewer = new qx.ui.core.Widget();
-        scope.add(scope._threeDViewer, {flex: 1});
+        scope._threeDViewer.setWidth(width);
+        scope._threeDViewer.setHeight(height);
+        scope.add(scope._threeDViewer, {top: 0, left: 0});
 
         scope._threeDViewer.addListenerOnce('appear', function() {
           scope._threeDViewer.getContentElement().getDomElement().appendChild(scope._threeWrapper.GetDomElement());
@@ -46,14 +42,13 @@ qx.Class.define('qxapp.components.threeView',
           document.addEventListener( 'mousedown', scope._onMouseDown.bind(scope), false );
           document.addEventListener( 'mousemove', scope._onMouseHover.bind(scope), false );
 
-          let that = scope;
           window.addEventListener( 'resize', function() {
-            that.set({
+            scope.set({
               width: window.innerWidth,
               height: window.innerHeight,
             });
-            that._threeWrapper.SetSize( window.innerWidth, window.innerHeight );
-          }, that );
+            scope._threeWrapper.SetSize( window.innerWidth, window.innerHeight );
+          }, scope );
 
           scope._render();
         }, scope);
@@ -72,6 +67,8 @@ qx.Class.define('qxapp.components.threeView',
     this._threeWrapper.addListener(('sceneToBeExported'), function(e) {
       scope.fireDataEvent('sceneToBeExported', e.getData());
     }, scope);
+
+    this._threeWrapper.Init();
   },
 
   events: {
@@ -126,6 +123,24 @@ qx.Class.define('qxapp.components.threeView',
           return;
         }
       }
+    },
+
+    ViewResized: function(width, height) {
+      let newWidth = width;
+      let newHeight = height;
+      if (newWidth == undefined) {
+        newWidth = window.innerWidth;
+        newHeight = window.innerHeight;
+      }
+      /*
+      this.set({
+        width: newWidth,
+        height: newHeight,
+      });
+      */
+      this._threeDViewer.setHeight(newHeight);
+      this._threeDViewer.setWidth(newWidth);
+      this._threeWrapper.SetSize(newWidth, newHeight);
     },
 
     _onMouseDown: function( event ) {
