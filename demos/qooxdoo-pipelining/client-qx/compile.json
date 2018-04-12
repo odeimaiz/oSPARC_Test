@@ -35,8 +35,24 @@
         "uri" : "resource/socketio/socket.io.js"
       },
       {
-	    "uri" : "resource/three/*"
+        "uri" : "resource/three/*"
+      },
+      {
+        "uri" : "resource/workbench/*"
       }
+    ]
+  },
+  
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module"
+    },
+    "globals": {
+      "JSZip": false
+    }, 
+    "extends": [
+      "qx/browser"
     ]
   }
 }
