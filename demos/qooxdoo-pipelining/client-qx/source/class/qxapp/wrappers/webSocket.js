@@ -4,6 +4,9 @@
  * @ignore(io)
  */
 
+/* eslint valid-jsdoc: "error" */
+/* eslint-env es6 */
+
 qx.Class.define('qxapp.wrappers.webSocket', {
   extend: qx.core.Object,
 
@@ -90,8 +93,8 @@ qx.Class.define('qxapp.wrappers.webSocket', {
   },
 
   /** Constructor
-   *
-   * @param namespace {string ? null} The namespace to connect on
+   * @param {string} [namespace] The namespace to connect on
+   * @returns {void}
    */
   construct: function(namespace) {
     this.base();
@@ -108,6 +111,7 @@ qx.Class.define('qxapp.wrappers.webSocket', {
 
     /**
      * Trying to using socket.io to connect and plug every event from socket.io to qooxdoo one
+     * @returns {void}
      */
     connect: function() {
       // initialize the script loading
@@ -177,8 +181,9 @@ qx.Class.define('qxapp.wrappers.webSocket', {
     /**
      * Emit an event using socket.io
      *
-     * @param name {string} The event name to send to Node.JS
-     * @param jsonObject {object} The JSON object to send to socket.io as parameters
+     * @param {string} name The event name to send to Node.JS
+     * @param {object} jsonObject The JSON object to send to socket.io as parameters
+     * @returns {void}
      */
     emit: function(name, jsonObject) {
       console.log('emit', name);
@@ -188,9 +193,10 @@ qx.Class.define('qxapp.wrappers.webSocket', {
     /**
      * Connect and event from socket.io like qooxdoo event
      *
-     * @param name {string} The event name to watch
-     * @param fn {function} The function wich will catch event response
-     * @param that {mixed} A link to this
+     * @param {string} name The event name to watch
+     * @param {function} fn The function wich will catch event response
+     * @param {mixed} that A link to this
+     * @returns {void}
      */
     on: function(name, fn, that) {
       this.__name.push(name);
@@ -213,6 +219,7 @@ qx.Class.define('qxapp.wrappers.webSocket', {
 
   /**
    * Destructor
+   * @returns {void}
    */
   destruct: function() {
     if (this.getSocket() != null) {
