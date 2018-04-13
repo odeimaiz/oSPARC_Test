@@ -1,0 +1,1 @@
+# Front-end pipelining prototype using [qooxdoo](http://qooxdoo.org/)
