@@ -11,13 +11,14 @@ qx.Class.define('qxapp.components.nodeBase',
       showClose: false,
       showStatusbar: false,
       resizable: false,
-      minWidth: 200,
+      allowMaximize: false,
+      minWidth: 160,
     });
 
-    let nodeLayout = new qx.ui.layout.VBox(10);
+    let nodeLayout = new qx.ui.layout.VBox(5, null, 'separator-vertical');
     this.setLayout(nodeLayout);
 
-    let inputsOutputsLayout = new qx.ui.container.Composite(new qx.ui.layout.HBox(10, null, 'separator-horizontal'));
+    let inputsOutputsLayout = new qx.ui.container.Composite(new qx.ui.layout.HBox(20));
     this.add(inputsOutputsLayout, {flex: 1});
 
     let inputsBox = new qx.ui.layout.VBox(5);
@@ -53,14 +54,14 @@ qx.Class.define('qxapp.components.nodeBase',
 
     SetInputs: function(names) {
       names.forEach((name) => {
-        let label = new qx.ui.basic.Label('name');
+        let label = new qx.ui.basic.Label(name);
         this._inputsLabels.add(label);
       });
     },
 
     SetOutputs: function(names) {
       names.forEach((name) => {
-        let label = new qx.ui.basic.Label('name');
+        let label = new qx.ui.basic.Label(name);
         this._outputsLabels.add(label);
       });
     },

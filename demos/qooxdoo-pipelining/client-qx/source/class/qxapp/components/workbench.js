@@ -24,6 +24,8 @@
   },
 
   members: {
+    _nodes: [],
+
     _addPlusButton: function() {
       let plusButton = new qx.ui.form.Button(null, 'workbench/images/add-icon.png');
       plusButton.set({
@@ -43,13 +45,17 @@
     },
 
     _addNodeToWorkbench(node) {
+      let nNodes = this._nodes.length;
+      node.moveTo(50 + nNodes*250, 150);
       node.open();
+
+      this._nodes.push(node);
     },
 
     _addNode: function() {
       let nodeBase = new qxapp.components.nodeBase();
       nodeBase.SetServiceName('My first service');
-      nodeBase.SetInputs(['In-Bat', 'In-Bi', 'In-Hiru']);
+      nodeBase.SetInputs(['In-Bat']);
       nodeBase.SetOutputs(['Out-Bat', 'Out-Bi', 'Out-Hiru']);
       this._addNodeToWorkbench(nodeBase);
     },
