@@ -42,7 +42,19 @@
       }, scope);
     },
 
+    _addNodeToWorkbench(node) {
+      node.open();
+    },
+
     _addNode: function() {
+      let nodeBase = new qxapp.components.nodeBase();
+      nodeBase.SetServiceName('My first service');
+      nodeBase.SetInputs(['In-Bat', 'In-Bi', 'In-Hiru']);
+      nodeBase.SetOutputs(['Out-Bat', 'Out-Bi', 'Out-Hiru']);
+      this._addNodeToWorkbench(nodeBase);
+    },
+
+    _addModeler: function() {
       const minWidth = 400;
       const minHeight = 400;
 
