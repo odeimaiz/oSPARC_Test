@@ -7,7 +7,7 @@
   extend: qx.ui.container.Composite,
 
   construct: function(viewWidth, viewHeight) {
-    this.base(arguments);
+    this.base();
 
     let canvas = new qx.ui.layout.Canvas();
     this.set({

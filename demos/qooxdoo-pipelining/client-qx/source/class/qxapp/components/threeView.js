@@ -8,7 +8,7 @@ qx.Class.define('qxapp.components.threeView',
   extend: qx.ui.container.Composite,
 
   construct: function(width, height, backgroundColor) {
-    this.base(arguments);
+    this.base();
 
     this.set({
       width: width,

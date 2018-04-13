@@ -3,7 +3,7 @@ qx.Class.define('qxapp.layout.layoutManager',
   extend: qx.ui.container.Composite,
 
   construct: function() {
-    this.base(arguments);
+    this.base();
 
     let body = document.body;
     let html = document.documentElement;

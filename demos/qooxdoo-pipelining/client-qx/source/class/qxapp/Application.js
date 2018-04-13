@@ -36,7 +36,7 @@ qx.Class.define('qxapp.Application',
      */
     main: function() {
       // Call super class
-      this.base(arguments);
+      this.base();
 
       // Enable logging in debug variant
       if (qx.core.Environment.get('qx.debug')) {
