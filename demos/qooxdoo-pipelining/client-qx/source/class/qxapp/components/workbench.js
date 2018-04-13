@@ -53,11 +53,11 @@
       win.setAllowMaximize(false);
       win.open();
 
-      let threeView = new qxapp.components.threeView(minWidth, minHeight, '#3F3F3F');
-      win.add(threeView, {flex: 1});
+      let threeWidget = new qxapp.components.threeWidget(minWidth, minHeight, '#3F3F3F');
+      win.add(threeWidget, {flex: 1});
 
       win.addListener('resize', function(e) {
-        threeView.ViewResized(e.getData().width, e.getData().height);
+        threeWidget.ViewResized(e.getData().width, e.getData().height);
       }, this);
     },
   },
