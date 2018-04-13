@@ -51,17 +51,14 @@
       win.setMinWidth(minWidth);
       win.setMinHeight(minHeight);
       win.setAllowMaximize(false);
+      win.open();
 
       let threeView = new qxapp.components.threeView(minWidth, minHeight, '#3F3F3F');
-      win.add(threeView);
+      win.add(threeView, {flex: 1});
 
       win.addListener('resize', function(e) {
-        // console.log('resizing window');
-        // console.log('width, height: ', e.getData().width, e.getData().height);
         threeView.ViewResized(e.getData().width, e.getData().height);
-      }, threeView);
-
-      win.open();
+      }, this);
     },
   },
 });

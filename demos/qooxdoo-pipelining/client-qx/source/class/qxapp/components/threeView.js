@@ -5,7 +5,7 @@ const FACE_PICKING = 3;
 
 qx.Class.define('qxapp.components.threeView',
 {
-  extend: qx.ui.container.Composite,
+  extend: qx.ui.core.Widget,
 
   construct: function(width, height, backgroundColor) {
     this.base();
@@ -15,24 +15,13 @@ qx.Class.define('qxapp.components.threeView',
       height: height,
     });
 
-    let canvas = new qx.ui.layout.Canvas();
-    this.set({
-      layout: canvas,
-    });
-
-    this._threeWrapper = new qxapp.wrappers.threeWrapper();
-
     let scope = this;
-    this._threeWrapper.addListener(('ThreeLibReady'), function(e) {
-      let ready = e.getData();
-      if (ready) {
-        scope._threeDViewer = new qx.ui.core.Widget();
-        scope._threeDViewer.setWidth(width);
-        scope._threeDViewer.setHeight(height);
-        scope.add(scope._threeDViewer, {top: 0, left: 0});
-
-        scope._threeDViewer.addListenerOnce('appear', function() {
-          scope._threeDViewer.getContentElement().getDomElement().appendChild(scope._threeWrapper.GetDomElement());
+    this.addListenerOnce('appear', function() {
+      scope._threeWrapper = new qxapp.wrappers.threeWrapper();
+      scope._threeWrapper.addListener(('ThreeLibReady'), function(e) {
+        let ready = e.getData();
+        if (ready) {
+          scope.getContentElement().getDomElement().appendChild(scope._threeWrapper.GetDomElement());
 
           scope._threeWrapper.SetBackgroundColor(backgroundColor);
           // scope._threeWrapper.SetCameraPosition(18, 0, 25);
@@ -51,24 +40,24 @@ qx.Class.define('qxapp.components.threeView',
           }, scope );
 
           scope._render();
-        }, scope);
-      } else {
-        console.log('Three.js was not loaded');
-      }
-    }, scope);
+        } else {
+          console.log('Three.js was not loaded');
+        }
+      }, scope);
 
-    this._threeWrapper.addListener(('EntityToBeAdded'), function(e) {
-      let newEntity = e.getData();
-      if (newEntity) {
-        scope.AddEntityToScene(newEntity);
-      }
-    }, scope);
+      scope._threeWrapper.addListener(('EntityToBeAdded'), function(e) {
+        let newEntity = e.getData();
+        if (newEntity) {
+          scope.AddEntityToScene(newEntity);
+        }
+      }, scope);
 
-    this._threeWrapper.addListener(('sceneToBeExported'), function(e) {
-      scope.fireDataEvent('sceneToBeExported', e.getData());
-    }, scope);
+      scope._threeWrapper.addListener(('sceneToBeExported'), function(e) {
+        scope.fireDataEvent('sceneToBeExported', e.getData());
+      }, scope);
 
-    this._threeWrapper.Init();
+      scope._threeWrapper.Init();
+    }, scope);
   },
 
   events: {
@@ -81,7 +70,6 @@ qx.Class.define('qxapp.components.threeView',
   },
 
   members: {
-    _threeDViewer: null,
     _threeWrapper: null,
     _transformControls: [],
     _entities: [],
@@ -132,15 +120,10 @@ qx.Class.define('qxapp.components.threeView',
         newWidth = window.innerWidth;
         newHeight = window.innerHeight;
       }
-      /*
-      this.set({
-        width: newWidth,
-        height: newHeight,
-      });
-      */
-      this._threeDViewer.setHeight(newHeight);
-      this._threeDViewer.setWidth(newWidth);
-      this._threeWrapper.SetSize(newWidth, newHeight);
+
+      if (this._threeWrapper) {
+        this._threeWrapper.SetSize(newWidth, newHeight);
+      }
     },
 
     _onMouseDown: function( event ) {
