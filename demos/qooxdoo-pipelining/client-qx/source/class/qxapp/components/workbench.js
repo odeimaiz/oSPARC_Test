@@ -16,7 +16,12 @@
       height: viewHeight,
     });
 
-    this._addPlusButton();
+    let plusButton = this._getPlusButton();
+
+    this.add(plusButton, {
+      left: 20,
+      top: 20,
+    });
   },
 
   events: {
@@ -26,38 +31,75 @@
   members: {
     _nodes: [],
 
-    _addPlusButton: function() {
-      let plusButton = new qx.ui.form.Button(null, 'workbench/images/add-icon.png');
+    _getPlusButton: function() {
+      let menuNodeTypes = new qx.ui.menu.Menu();
+
+      let producersButton = new qx.ui.menu.Button('Producers', null, null, this._getProducers());
+      let computationalsButton = new qx.ui.menu.Button('Computationals', null, null, this._getComputationals());
+      let analysesButton = new qx.ui.menu.Button('Analyses', null, null, this._getAnalyses());
+
+      menuNodeTypes.add(producersButton);
+      menuNodeTypes.add(computationalsButton);
+      menuNodeTypes.add(analysesButton);
+
+      let plusButton = new qx.ui.form.MenuButton(null, 'workbench/images/add-icon.png', menuNodeTypes);
       plusButton.set({
         width: 50,
         height: 50,
       });
+      return plusButton;
+    },
 
-      this.add(plusButton, {
-        left: 20,
-        top: 20,
+    _getProducers: function() {
+      const producers = ['Producer 1', 'Producer 2'];
+      return this._createMenuFromList(producers);
+    },
+
+    _getComputationals: function() {
+      const computationals = ['Computational 1', 'Computational 2', 'Computational 3', 'Computational 4'];
+      return this._createMenuFromList(computationals);
+    },
+
+    _getAnalyses: function() {
+      const analyses = ['Analysis 1', 'Analysis 2', 'Analysis 3'];
+      return this._createMenuFromList(analyses);
+    },
+
+    _createMenuFromList: function(nodesList) {
+      let buttonsListMenu = new qx.ui.menu.Menu;
+
+      nodesList.forEach((node) => {
+        let nodeButton = new qx.ui.menu.Button(node);
+
+        let scope = this;
+        nodeButton.addListener('execute', function() {
+          scope._addNode(node);
+        }, scope);
+
+        buttonsListMenu.add(nodeButton);
       });
 
-      let scope = this;
-      plusButton.addListener('execute', function() {
-        scope._addNode();
-      }, scope);
+      return buttonsListMenu;
     },
 
     _addNodeToWorkbench(node) {
       let nNodes = this._nodes.length;
-      node.moveTo(50 + nNodes*250, 150);
+      node.moveTo(50 + nNodes*250, 200);
       node.open();
 
       this._nodes.push(node);
     },
 
-    _addNode: function() {
+    _addNode: function(nodeName) {
       let nodeBase = new qxapp.components.nodeBase();
-      nodeBase.SetServiceName('My first service');
+      nodeBase.SetServiceName(nodeName);
       nodeBase.SetInputs(['In-Bat']);
       nodeBase.SetOutputs(['Out-Bat', 'Out-Bi', 'Out-Hiru']);
       this._addNodeToWorkbench(nodeBase);
+
+      nodeBase.addListener('move', function(e) {
+        console.log(e.getData(), nodeBase);
+      });
     },
 
     _addModeler: function() {
