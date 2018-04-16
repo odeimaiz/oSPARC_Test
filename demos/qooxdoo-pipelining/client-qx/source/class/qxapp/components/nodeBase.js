@@ -43,6 +43,14 @@ qx.Class.define('qxapp.components.nodeBase',
 
   },
 
+  properties: {
+    id: {
+      init: qxapp.utils.utils.uuidv4(),
+      check: 'String',
+      nullable: false,
+    },
+  },
+
   members: {
     _inputsLabels: null,
     _outputsLabels: null,
