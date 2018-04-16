@@ -54,7 +54,7 @@ qx.Class.define('qxapp.wrappers.svgWrapper',
     },
 
     DrawCurve(draw, x1, y1, x2, y2) {
-      return draw.path().M({x: x1, y: y1}).c({x: x1+200, y: y1}, {x: x2, y: y2}, {x: x2-200, y: y2});
+      return draw.path().M(x1, y1).C({x: x1+200, y: y1}, {x: x2-200, y: y2}, {x: x2, y: y2}).fill('none').stroke({width: 3, color: '#00F'});
     },
 
     DrawDummyRect(draw, w, h) {

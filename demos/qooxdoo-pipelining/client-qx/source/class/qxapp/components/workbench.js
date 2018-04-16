@@ -2,7 +2,9 @@
  * @asset(workbench/*)
  */
 
- qx.Class.define('qxapp.components.workbench',
+const LINKS_LAYER_ID = 'drawing';
+
+qx.Class.define('qxapp.components.workbench',
 {
   extend: qx.ui.container.Composite,
 
@@ -22,6 +24,8 @@
       left: 20,
       top: 20,
     });
+
+    this._createSvgLinksLayer();
   },
 
   events: {
@@ -30,6 +34,31 @@
 
   members: {
     _nodes: [],
+    _svgWrapper: null,
+    _linksCanvas: null,
+
+    _createSvgLinksLayer: function() {
+      this._svgWrapper = new qxapp.wrappers.svgWrapper();
+
+      let scope = this;
+      this._svgWrapper.addListener(('SvgLibReady'), function(e) {
+        let ready = e.getData();
+        if (ready) {
+          let svgPlaceholder = qx.dom.Element.create('div');
+          qx.bom.element.Attribute.set(svgPlaceholder, 'id', LINKS_LAYER_ID);
+          qx.bom.element.Style.set(svgPlaceholder, 'z-index', 12);
+          scope.getContentElement().getDomElement().appendChild(svgPlaceholder);
+
+          scope._linksCanvas = scope._svgWrapper.CreateEmptyCanvas(LINKS_LAYER_ID, 0, 0, scope.getWidth(), scope.getHeight());
+        }
+      }, scope);
+
+      this._svgWrapper.Init();
+    },
+
+    _addDummyRect: function() {
+      this._svgWrapper.DrawDummyRect(this._linksCanvas, 100, 100);
+    },
 
     _getPlusButton: function() {
       let menuNodeTypes = new qx.ui.menu.Menu();
@@ -88,6 +117,8 @@
       node.open();
 
       this._nodes.push(node);
+
+      this._addLink();
     },
 
     _addNode: function(nodeName) {
@@ -100,6 +131,14 @@
       nodeBase.addListener('move', function(e) {
         console.log(e.getData(), nodeBase);
       });
+    },
+
+    _addLink: function() {
+      const x1 = 50+160;
+      const y1 = 200+45;
+      const x2 = 50+160+250;
+      const y2 = 200+45+100;
+      this._svgWrapper.DrawCurve(this._linksCanvas, x1, y1, x2, y2);
     },
 
     _addModeler: function() {
