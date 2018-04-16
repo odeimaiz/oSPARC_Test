@@ -54,11 +54,13 @@ qx.Class.define('qxapp.wrappers.svgWrapper',
     },
 
     DrawCurve(draw, x1, y1, x2, y2) {
-      return draw.path().M(x1, y1).C({x: x1+200, y: y1}, {x: x2-200, y: y2}, {x: x2, y: y2}).fill('none').stroke({width: 3, color: '#00F'});
+      const offset = 100;
+      return draw.path().M(x1, y1).C({x: x1+offset, y: y1}, {x: x2-offset, y: y2}, {x: x2, y: y2}).fill('none').stroke({width: 3, color: '#00F'});
     },
 
-    DrawDummyRect(draw, w, h) {
-      return draw.rect(w, h);
+    UpdateCurve(draw, curve, x1, y1, x2, y2) {
+      const offset = 100;
+      return draw.path().M(x1, y1).C({x: x1+offset, y: y1}, {x: x2-offset, y: y2}, {x: x2, y: y2}).fill('none').stroke({width: 3, color: '#00F'});
     },
   },
 });
