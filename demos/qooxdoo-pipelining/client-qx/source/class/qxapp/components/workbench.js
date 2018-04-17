@@ -9,14 +9,12 @@ qx.Class.define('qxapp.components.workbench',
 {
   extend: qx.ui.container.Composite,
 
-  construct: function(viewWidth, viewHeight) {
+  construct: function() {
     this.base();
 
     let canvas = new qx.ui.layout.Canvas();
     this.set({
       layout: canvas,
-      width: viewWidth,
-      height: viewHeight,
     });
 
     let plusButton = this._getPlusButton();
@@ -38,6 +36,13 @@ qx.Class.define('qxapp.components.workbench',
     _links: [],
     _svgWrapper: null,
     _linksCanvas: null,
+
+    SetSize: function(viewWidth, viewHeight) {
+      this.set({
+        width: viewWidth,
+        height: viewHeight,
+      });
+    },
 
     _createSvgLinksLayer: function() {
       this._svgWrapper = new qxapp.wrappers.svgWrapper();
@@ -141,9 +146,9 @@ qx.Class.define('qxapp.components.workbench',
       const node2Pos = node2.getBounds();
 
       const x1 = node1Pos.left + node1Pos.width;
-      const y1 = node1Pos.top + 45;
+      const y1 = node1Pos.top + 50;
       const x2 = node2Pos.left;
-      const y2 = node2Pos.top + 45;
+      const y2 = node2Pos.top + 50;
       let linkRepresentation = this._svgWrapper.DrawCurve(this._linksCanvas, x1, y1, x2, y2);
       let linkBase = new qxapp.components.linkBase(linkRepresentation);
       linkBase.setInputId(node1.getNodeId());

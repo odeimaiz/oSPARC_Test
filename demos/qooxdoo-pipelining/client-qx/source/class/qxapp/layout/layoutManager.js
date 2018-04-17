@@ -5,11 +5,8 @@ qx.Class.define('qxapp.layout.layoutManager',
   construct: function() {
     this.base();
 
-    let body = document.body;
-    let html = document.documentElement;
-
-    let docWidth = Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
-    let docHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+    let docWidth = this._getDocWidth();
+    let docHeight = this._getDocHeight();
 
     this.set({
       width: docWidth,
@@ -27,8 +24,20 @@ qx.Class.define('qxapp.layout.layoutManager',
       layout: box,
     });
 
-    this._workbench = new qxapp.components.workbench(docWidth, docHeight);
+    this._workbench = new qxapp.components.workbench();
+    this._workbench.SetSize(docWidth, docHeight);
     this.add(this._workbench);
+
+    let scope = this;
+    window.addEventListener( 'resize', function() {
+      let docWidth = scope._getDocWidth();
+      let docHeight = scope._getDocHeight();
+      scope.set({
+        width: docWidth,
+        height: docHeight,
+      });
+      scope._workbench.SetSize(docWidth, docHeight);
+    }, scope);
   },
 
   events: {
@@ -36,8 +45,18 @@ qx.Class.define('qxapp.layout.layoutManager',
   },
 
   members: {
-    _addNode: function() {
-      console.log('Add Node');
+    _getDocWidth: function() {
+      let body = document.body;
+      let html = document.documentElement;
+      let docWidth = Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
+      return docWidth;
+    },
+
+    _getDocHeight: function() {
+      let body = document.body;
+      let html = document.documentElement;
+      let docHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+      return docHeight;
     },
   },
 });
