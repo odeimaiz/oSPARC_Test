@@ -135,13 +135,52 @@ qx.Class.define('qxapp.components.workbench',
       nodeBase.SetOutputs(['Out-Bat']);
       this._addNodeToWorkbench(nodeBase);
 
+      let scope = this;
       nodeBase.addListener('move', function(e) {
-        console.log('Node moved: ', e.getData(), nodeBase);
-        
-      });
+        let linksInvolved = new Set([]);
+        nodeBase.GetInputLinkIDs().forEach((linkId) => {
+          linksInvolved.add(linkId);
+        });
+        nodeBase.GetOutputLinkIDs().forEach((linkId) => {
+          linksInvolved.add(linkId);
+        });
+
+        linksInvolved.forEach((linkId) => {
+          let link = scope._getLink(linkId);
+          if (link) {
+            let node1 = scope._getNode(link.getInputId());
+            let node2 = scope._getNode(link.getOutputId());
+            const pointList = scope._getLinkPoints(node1, node2);
+            const x1 = pointList[0][0];
+            const y1 = pointList[0][1];
+            const x2 = pointList[1][0];
+            const y2 = pointList[1][1];
+            scope._svgWrapper.UpdateCurve(link.getRepresentation(), x1, y1, x2, y2);
+          }
+        });
+      }, scope);
     },
 
     _addLink: function(node1, node2) {
+      const pointList = this._getLinkPoints(node1, node2);
+      const x1 = pointList[0][0];
+      const y1 = pointList[0][1];
+      const x2 = pointList[1][0];
+      const y2 = pointList[1][1];
+      let linkRepresentation = this._svgWrapper.DrawCurve(this._linksCanvas, x1, y1, x2, y2);
+      let linkBase = new qxapp.components.linkBase(linkRepresentation);
+      linkBase.setInputId(node1.getNodeId());
+      linkBase.setOutputId(node2.getNodeId());
+      node1.AddOutputLinkID(linkBase.getLinkId());
+      node2.AddInputLinkID(linkBase.getLinkId());
+      this._links.push(linkBase);
+
+      linkBase.getRepresentation().node.addEventListener('click', function(e) {
+        console.log('clicked', linkBase.getLinkId(), e);
+      });
+    },
+
+    _getLinkPoints: function(node1, node2) {
       const node1Pos = node1.getBounds();
       const node2Pos = node2.getBounds();
 
@@ -149,32 +188,24 @@ qx.Class.define('qxapp.components.workbench',
       const y1 = node1Pos.top + 50;
       const x2 = node2Pos.left;
       const y2 = node2Pos.top + 50;
-      let linkRepresentation = this._svgWrapper.DrawCurve(this._linksCanvas, x1, y1, x2, y2);
-      let linkBase = new qxapp.components.linkBase(linkRepresentation);
-      linkBase.setInputId(node1.getNodeId());
-      linkBase.setOutputId(node2.getNodeId());
-      this._links.push(linkBase);
-
-      linkRepresentation.node.addEventListener('click', function(e) {
-        console.log('clicked', e);
-      });
+      return [[x1, y1], [x2, y2]];
     },
 
     _getNode: function(id) {
-      this._nodes.forEach((node) => {
-        if (node.getLinkId() === id) {
-          return node;
+      for (let i = 0; i < this._nodes.length; i++) {
+        if (this._nodes[i].getNodeId() === id) {
+          return this._nodes[i];
         }
-      });
+      };
       return null;
     },
 
     _getLink: function(id) {
-      this._links.forEach((link) => {
-        if (link.getNodeId() === id) {
-          return link;
+      for (let i = 0; i < this._links.length; i++) {
+        if (this._links[i].getLinkId() === id) {
+          return this._links[i];
         }
-      });
+      };
       return null;
     },
 

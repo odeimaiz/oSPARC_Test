@@ -15,6 +15,8 @@ qx.Class.define('qxapp.components.nodeBase',
       minWidth: 160,
     });
 
+    this.setNodeId(qxapp.utils.utils.uuidv4());
+
     let nodeLayout = new qx.ui.layout.VBox(5, null, 'separator-vertical');
     this.setLayout(nodeLayout);
 
@@ -37,6 +39,9 @@ qx.Class.define('qxapp.components.nodeBase',
     this._progressLabel = new qx.ui.basic.Label('0%');
     progressLayout.add(this._progressLabel);
     this.add(progressLayout);
+
+    this._inputLinkIDs = [];
+    this._outputLinkIDs = [];
   },
 
   events: {
@@ -45,7 +50,6 @@ qx.Class.define('qxapp.components.nodeBase',
 
   properties: {
     nodeId: {
-      init: qxapp.utils.utils.uuidv4(),
       check: 'String',
       nullable: false,
     },
@@ -55,6 +59,8 @@ qx.Class.define('qxapp.components.nodeBase',
     _inputsLabels: null,
     _outputsLabels: null,
     _progressLabel: null,
+    _inputLinkIDs: null,
+    _outputLinkIDs: null,
 
     SetServiceName: function(name) {
       this.setCaption(name);
@@ -72,6 +78,24 @@ qx.Class.define('qxapp.components.nodeBase',
         let label = new qx.ui.basic.Label(name);
         this._outputsLabels.add(label);
       });
+    },
+
+    AddInputLinkID: function(linkID) {
+      this._inputLinkIDs.push(linkID);
+      console.log('In', this.getNodeId(), this._inputLinkIDs);
+    },
+
+    GetInputLinkIDs: function() {
+      return this._inputLinkIDs;
+    },
+
+    AddOutputLinkID: function(linkID) {
+      this._outputLinkIDs.push(linkID);
+      console.log('Out', this.getNodeId(), this._outputLinkIDs);
+    },
+
+    GetOutputLinkIDs: function() {
+      return this._outputLinkIDs;
     },
   },
 });
