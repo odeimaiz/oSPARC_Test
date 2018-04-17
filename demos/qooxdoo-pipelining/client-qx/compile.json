@@ -30,15 +30,15 @@
   ],
 
   "common" : {
-    "add-script" : [
+    "add-script": [
       {
         "uri" : "resource/socketio/socket.io.js"
       },
       {
-        "uri" : "resource/three/*"
+        "uri" : "resource/three/*.js"
       },
       {
-        "uri" : "resource/workbench/*"
+        "uri" : "resource/workbench/svg*.js"
       }
     ]
   },

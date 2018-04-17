@@ -1,5 +1,6 @@
 /**
- * @asset(workbench/*)
+ *
+ * @asset(qxapp/icons/workbench/*)
  */
 
 const LINKS_LAYER_ID = 'drawing';
@@ -21,8 +22,8 @@ qx.Class.define('qxapp.components.workbench',
     let plusButton = this._getPlusButton();
 
     this.add(plusButton, {
-      left: 20,
-      top: 20,
+      right: 20,
+      bottom: 20,
     });
 
     this._createSvgLinksLayer();
@@ -68,7 +69,7 @@ qx.Class.define('qxapp.components.workbench',
       menuNodeTypes.add(computationalsButton);
       menuNodeTypes.add(analysesButton);
 
-      let plusButton = new qx.ui.form.MenuButton(null, 'workbench/images/add-icon.png', menuNodeTypes);
+      let plusButton = new qx.ui.form.MenuButton(null, 'qxapp/icons/workbench/add-icon.png', menuNodeTypes);
       plusButton.set({
         width: 50,
         height: 50,

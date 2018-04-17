@@ -1,6 +1,5 @@
 /**
- * @asset(workbench/svg.js)
- * @asset(workbench/svg.path.js)
+ * @asset(workbench/svg.*js)
  * @ignore(SVG)
  */
 
