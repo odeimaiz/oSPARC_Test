@@ -82,22 +82,24 @@ qx.Class.define('qxapp.components.workbench',
       return plusButton;
     },
 
-    _getProducers: function() {
-      const producers = ['Producer 1', 'Producer 2'];
-      return this._createMenuFromList(producers);
-    },
-
-    _getComputationals: function() {
-      const computationals = ['Computational 1', 'Computational 2', 'Computational 3', 'Computational 4'];
-      return this._createMenuFromList(computationals);
-    },
-
-    _getAnalyses: function() {
-      const analyses = ['Analysis 1', 'Analysis 2', 'Analysis 3'];
-      return this._createMenuFromList(analyses);
-    },
-
     _createMenuFromList: function(nodesList) {
+      let buttonsListMenu = new qx.ui.menu.Menu;
+
+      nodesList.forEach((node) => {
+        let nodeButton = new qx.ui.menu.Button(node.name);
+
+        let scope = this;
+        nodeButton.addListener('execute', function() {
+          scope._addNode(node);
+        }, scope);
+
+        buttonsListMenu.add(nodeButton);
+      });
+
+      return buttonsListMenu;
+    },
+
+    _createMenuFromListOld: function(nodesList) {
       let buttonsListMenu = new qx.ui.menu.Menu;
 
       nodesList.forEach((node) => {
@@ -105,7 +107,7 @@ qx.Class.define('qxapp.components.workbench',
 
         let scope = this;
         nodeButton.addListener('execute', function() {
-          scope._addNode(node);
+          scope._addNodeOld(node);
         }, scope);
 
         buttonsListMenu.add(nodeButton);
@@ -128,7 +130,37 @@ qx.Class.define('qxapp.components.workbench',
       }
     },
 
-    _addNode: function(nodeName) {
+    _addNode: function(node) {
+      let nodeBase = new qxapp.components.nodeBase(node);
+      this._addNodeToWorkbench(nodeBase);
+
+      let scope = this;
+      nodeBase.addListener('move', function(e) {
+        let linksInvolved = new Set([]);
+        nodeBase.GetInputLinkIDs().forEach((linkId) => {
+          linksInvolved.add(linkId);
+        });
+        nodeBase.GetOutputLinkIDs().forEach((linkId) => {
+          linksInvolved.add(linkId);
+        });
+
+        linksInvolved.forEach((linkId) => {
+          let link = scope._getLink(linkId);
+          if (link) {
+            let node1 = scope._getNode(link.getInputId());
+            let node2 = scope._getNode(link.getOutputId());
+            const pointList = scope._getLinkPoints(node1, node2);
+            const x1 = pointList[0][0];
+            const y1 = pointList[0][1];
+            const x2 = pointList[1][0];
+            const y2 = pointList[1][1];
+            scope._svgWrapper.UpdateCurve(link.getRepresentation(), x1, y1, x2, y2);
+          }
+        });
+      }, scope);
+    },
+
+    _addNodeOld: function(nodeName) {
       let nodeBase = new qxapp.components.nodeBase();
       nodeBase.SetServiceName(nodeName);
       nodeBase.SetInputs(['In-Bat']);
@@ -239,6 +271,56 @@ qx.Class.define('qxapp.components.workbench',
       win.addListener('resize', function(e) {
         threeWidget.ViewResized(e.getData().width, e.getData().height);
       }, this);
+    },
+
+    _getProducers: function() {
+      const producers = [{
+        'id': 'ModelerID',
+        'name': 'Modeler',
+        'input': [],
+        'settings': [{
+          'name': 'ViPModel',
+          'options': [
+            'Rat',
+            'Sphere',
+          ],
+          'text': 'Select ViP Model',
+          'type': 'select',
+          'value': 0,
+        }],
+        'output': [{
+          'name': 'Scene',
+          'type': 'scene',
+          'value': '',
+        }],
+      },
+      {
+        'id': 'NumberGeneratorID',
+        'name': 'Number Generator',
+        'input': [],
+        'settings': [{
+          'name': 'number',
+          'text': 'Number',
+          'type': 'number',
+          'value': 0,
+        }],
+        'output': [{
+          'name': 'Number',
+          'type': 'number',
+          'value': '',
+        }],
+      }];
+      return this._createMenuFromList(producers);
+    },
+
+    _getComputationals: function() {
+      const computationals = ['Computational 1', 'Computational 2', 'Computational 3', 'Computational 4'];
+      return this._createMenuFromListOld(computationals);
+    },
+
+    _getAnalyses: function() {
+      const analyses = ['Analysis 1', 'Analysis 2', 'Analysis 3'];
+      return this._createMenuFromListOld(analyses);
     },
   },
 });
