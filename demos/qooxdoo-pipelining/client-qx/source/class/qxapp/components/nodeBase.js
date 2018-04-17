@@ -82,7 +82,6 @@ qx.Class.define('qxapp.components.nodeBase',
 
     AddInputLinkID: function(linkID) {
       this._inputLinkIDs.push(linkID);
-      console.log('In', this.getNodeId(), this._inputLinkIDs);
     },
 
     GetInputLinkIDs: function() {
@@ -91,7 +90,6 @@ qx.Class.define('qxapp.components.nodeBase',
 
     AddOutputLinkID: function(linkID) {
       this._outputLinkIDs.push(linkID);
-      console.log('Out', this.getNodeId(), this._outputLinkIDs);
     },
 
     GetOutputLinkIDs: function() {
