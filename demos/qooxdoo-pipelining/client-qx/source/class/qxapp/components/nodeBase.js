@@ -44,12 +44,13 @@ qx.Class.define('qxapp.components.nodeBase',
     this._outputLinkIDs = [];
 
     if (metadata != undefined) {
-      this.SetServiceName(metadata.name);
-      metadata.input.forEach((input) => {
+      this._metadata = metadata;
+      this.SetServiceName(this._metadata.name);
+      this._metadata.input.forEach((input) => {
         let label = new qx.ui.basic.Label(input.name);
         this._inputsLabels.add(label);
       });
-      metadata.output.forEach((output) => {
+      this._metadata.output.forEach((output) => {
         let label = new qx.ui.basic.Label(output.name);
         this._outputsLabels.add(label);
       });
@@ -68,6 +69,7 @@ qx.Class.define('qxapp.components.nodeBase',
   },
 
   members: {
+    _metadata: null,
     _inputsLabels: null,
     _outputsLabels: null,
     _progressLabel: null,

@@ -31,7 +31,7 @@ qx.Class.define('qxapp.components.workbench',
   },
 
   events: {
-
+    'NodeDoubleClicked': 'qx.event.type.Data',
   },
 
   members: {
@@ -105,7 +105,7 @@ qx.Class.define('qxapp.components.workbench',
 
         let scope = this;
         nodeButton.addListener('execute', function() {
-          scope._addNodeOld(node);
+          scope._addNode(node);
         }, scope);
 
         buttonsListMenu.add(nodeButton);
@@ -130,7 +130,15 @@ qx.Class.define('qxapp.components.workbench',
     },
 
     _addNode: function(node) {
-      let nodeBase = new qxapp.components.nodeBase(node);
+      let nodeBase = null;
+      if (typeof node === 'string') {
+        nodeBase = new qxapp.components.nodeBase();
+        nodeBase.SetServiceName(node);
+        nodeBase.SetInputs(['In-Bat']);
+        nodeBase.SetOutputs(['Out-Bat']);
+      } else {
+        nodeBase = new qxapp.components.nodeBase(node);
+      }
       this._addNodeToWorkbench(nodeBase);
 
       let scope = this;
@@ -157,38 +165,9 @@ qx.Class.define('qxapp.components.workbench',
           }
         });
       }, scope);
-    },
 
-    _addNodeOld: function(nodeName) {
-      let nodeBase = new qxapp.components.nodeBase();
-      nodeBase.SetServiceName(nodeName);
-      nodeBase.SetInputs(['In-Bat']);
-      nodeBase.SetOutputs(['Out-Bat']);
-      this._addNodeToWorkbench(nodeBase);
-
-      let scope = this;
-      nodeBase.addListener('move', function(e) {
-        let linksInvolved = new Set([]);
-        nodeBase.GetInputLinkIDs().forEach((linkId) => {
-          linksInvolved.add(linkId);
-        });
-        nodeBase.GetOutputLinkIDs().forEach((linkId) => {
-          linksInvolved.add(linkId);
-        });
-
-        linksInvolved.forEach((linkId) => {
-          let link = scope._getLink(linkId);
-          if (link) {
-            let node1 = scope._getNode(link.getInputId());
-            let node2 = scope._getNode(link.getOutputId());
-            const pointList = scope._getLinkPoints(node1, node2);
-            const x1 = pointList[0][0];
-            const y1 = pointList[0][1];
-            const x2 = pointList[1][0];
-            const y2 = pointList[1][1];
-            scope._svgWrapper.UpdateCurve(link.getRepresentation(), x1, y1, x2, y2);
-          }
-        });
+      nodeBase.addListener('dblclick', function(e) {
+        scope.fireDataEvent('NodeDoubleClicked', nodeBase);
       }, scope);
     },
 

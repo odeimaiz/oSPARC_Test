@@ -13,16 +13,14 @@ qx.Class.define('qxapp.layout.layoutManager',
       height: docHeight,
     });
 
-    let box = new qx.ui.layout.Canvas();
-
     this.set({
-      layout: box,
+      layout: new qx.ui.layout.Canvas(),
     });
 
     // Create a horizontal split pane
     this._pane = new qx.ui.splitpane.Pane('horizontal');
 
-    const settingsWidth = 400;
+    const settingsWidth = 500;
     this._settingsView = new qxapp.components.settingsView();
     this._settingsView.set({
       minWidth: settingsWidth/2,
@@ -35,15 +33,24 @@ qx.Class.define('qxapp.layout.layoutManager',
 
     this.add(this._pane, {left: 0, top: 0, right: 0, bottom: 0});
 
+    this._showSettings(false);
+
     let scope = this;
-    window.addEventListener( 'resize', function() {
+    this._settingsView.addListener('SettingsEditionDone', function() {
+      scope._showSettings(false);
+    }, scope);
+
+    this._workbench.addListener('NodeDoubleClicked', function(e) {
+      scope._showSettings(true);
+    }, scope);
+
+    window.addEventListener('resize', function() {
       let docWidth = scope._getDocWidth();
       let docHeight = scope._getDocHeight();
       scope.set({
         width: docWidth,
         height: docHeight,
       });
-      // scope._workbench.SetSize(docWidth, docHeight);
     }, scope);
   },
 
