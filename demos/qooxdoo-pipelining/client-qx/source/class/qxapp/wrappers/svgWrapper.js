@@ -49,7 +49,7 @@ qx.Class.define('qxapp.wrappers.svgWrapper',
     },
 
     CreateEmptyCanvas: function(id) {
-      return SVG(id).size('100%', '100%');
+      return SVG(id);
     },
 
     _getControls(x1, y1, x2, y2) {
