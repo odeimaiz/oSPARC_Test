@@ -17,6 +17,7 @@ qx.Class.define('qxapp.components.settingsView',
     });
 
     this._InitTitle();
+    this._InitSettings();
   },
 
   events: {
@@ -24,6 +25,7 @@ qx.Class.define('qxapp.components.settingsView',
   },
 
   members: {
+    _settingsBox: null,
 
     _InitTitle: function() {
       let box = new qx.ui.layout.HBox();
@@ -47,6 +49,27 @@ qx.Class.define('qxapp.components.settingsView',
       doneBtn.addListener('execute', function() {
         scope.fireEvent('SettingsEditionDone');
       }, scope);
+    },
+
+    _InitSettings: function() {
+      this._settingsBox = new qx.ui.container.Composite(new qx.ui.layout.VBox(10));
+      this.add(this._settingsBox);
+    },
+
+    SetNodeMetadata: function(nodeMetadata) {
+      this._settingsBox.removeAll();
+      let changeTitleBox = new qx.ui.container.Composite(new qx.ui.layout.HBox(10));
+      {
+        let titleLabel = new qx.ui.basic.Label('Node Title');
+        titleLabel.set({
+          alignX: 'right',
+          alignY: 'middle',
+        });
+        let titleInput = new qx.ui.form.TextField(nodeMetadata.GetMetaData().name);
+        changeTitleBox.add(titleLabel, {width: '50%'});
+        changeTitleBox.add(titleInput, {width: '50%'});
+      }
+      this._settingsBox.add(changeTitleBox);
     },
   },
 });

@@ -76,6 +76,10 @@ qx.Class.define('qxapp.components.nodeBase',
     _inputLinkIDs: null,
     _outputLinkIDs: null,
 
+    GetMetaData: function() {
+      return this._metadata;
+    },
+
     SetServiceName: function(name) {
       this.setCaption(name);
     },

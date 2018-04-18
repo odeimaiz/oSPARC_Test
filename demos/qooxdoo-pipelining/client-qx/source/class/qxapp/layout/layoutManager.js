@@ -23,8 +23,9 @@ qx.Class.define('qxapp.layout.layoutManager',
     const settingsWidth = 500;
     this._settingsView = new qxapp.components.settingsView();
     this._settingsView.set({
-      minWidth: settingsWidth/2,
+      minWidth: settingsWidth*0.5,
       maxWidth: settingsWidth,
+      width: settingsWidth*0.75,
     });
     this._pane.add(this._settingsView, 0);
 
@@ -42,6 +43,7 @@ qx.Class.define('qxapp.layout.layoutManager',
 
     this._workbench.addListener('NodeDoubleClicked', function(e) {
       scope._showSettings(true);
+      scope._settingsView.SetNodeMetadata(e.getData());
     }, scope);
 
     window.addEventListener('resize', function() {
