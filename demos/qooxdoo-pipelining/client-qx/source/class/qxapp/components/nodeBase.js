@@ -12,7 +12,7 @@ qx.Class.define('qxapp.components.nodeBase',
       showStatusbar: false,
       resizable: false,
       allowMaximize: false,
-      minWidth: 160,
+      minWidth: 180,
     });
 
     this.setNodeId(qxapp.utils.utils.uuidv4());

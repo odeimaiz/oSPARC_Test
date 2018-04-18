@@ -57,8 +57,6 @@ qx.Class.define('qxapp.components.settingsView',
     },
 
     SetNodeMetadata: function(node) {
-      console.log(node.GetMetaData());
-
       this._settingsBox.removeAll();
 
       let form = new qx.ui.form.Form();

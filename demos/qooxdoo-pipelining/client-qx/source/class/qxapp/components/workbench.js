@@ -97,23 +97,6 @@ qx.Class.define('qxapp.components.workbench',
       return buttonsListMenu;
     },
 
-    _createMenuFromListOld: function(nodesList) {
-      let buttonsListMenu = new qx.ui.menu.Menu;
-
-      nodesList.forEach((node) => {
-        let nodeButton = new qx.ui.menu.Button(node);
-
-        let scope = this;
-        nodeButton.addListener('execute', function() {
-          scope._addNode(node);
-        }, scope);
-
-        buttonsListMenu.add(nodeButton);
-      });
-
-      return buttonsListMenu;
-    },
-
     _addNodeToWorkbench(node) {
       let nNodesB = this._nodes.length;
       node.moveTo(50 + nNodesB*250, 200);
@@ -130,15 +113,7 @@ qx.Class.define('qxapp.components.workbench',
     },
 
     _addNode: function(node) {
-      let nodeBase = null;
-      if (typeof node === 'string') {
-        nodeBase = new qxapp.components.nodeBase();
-        nodeBase.SetServiceName(node);
-        nodeBase.SetInputs(['In-Bat']);
-        nodeBase.SetOutputs(['Out-Bat']);
-      } else {
-        nodeBase = new qxapp.components.nodeBase(node);
-      }
+      let nodeBase = new qxapp.components.nodeBase(node);
       this._addNodeToWorkbench(nodeBase);
 
       let scope = this;
@@ -256,6 +231,11 @@ qx.Class.define('qxapp.components.workbench',
         'id': 'ModelerID',
         'name': 'Modeler',
         'input': [],
+        'output': [{
+          'name': 'Scene',
+          'type': 'scene',
+          'value': '',
+        }],
         'settings': [{
           'name': 'ViPModel',
           'options': [
@@ -266,39 +246,114 @@ qx.Class.define('qxapp.components.workbench',
           'type': 'select',
           'value': 0,
         }],
-        'output': [{
-          'name': 'Scene',
-          'type': 'scene',
-          'value': '',
-        }],
       },
       {
         'id': 'NumberGeneratorID',
         'name': 'Number Generator',
         'input': [],
+        'output': [{
+          'name': 'Number',
+          'type': 'number',
+          'value': '',
+        }],
         'settings': [{
           'name': 'number',
           'text': 'Number',
           'type': 'number',
           'value': 0,
         }],
-        'output': [{
-          'name': 'Number',
-          'type': 'number',
-          'value': '',
-        }],
       }];
       return this._createMenuFromList(producers);
     },
 
     _getComputationals: function() {
-      const computationals = ['Computational 1', 'Computational 2', 'Computational 3', 'Computational 4'];
-      return this._createMenuFromListOld(computationals);
+      const computationals = [{
+        'id': 'Computational1',
+        'name': 'Computational 1',
+        'input': [{
+          'name': 'Scene',
+          'type': 'scene',
+          'value': '',
+        }],
+        'output': [{
+          'name': 'Some numbers',
+          'type': 'number',
+          'value': '',
+        }],
+        'settings': [],
+      },
+      {
+        'id': 'Computational2',
+        'name': 'Computational 2',
+        'input': [{
+          'name': 'Scene',
+          'type': 'scene',
+          'value': '',
+        }],
+        'output': [{
+          'name': 'Other numbers',
+          'type': 'number',
+          'value': '',
+        }],
+        'settings': [],
+      },
+      {
+        'id': 'Computational3',
+        'name': 'Computational 3',
+        'input': [{
+          'name': 'Number',
+          'type': 'number',
+          'value': '',
+        }],
+        'output': [{
+          'name': 'Some numbers',
+          'type': 'number',
+          'value': '',
+        }],
+        'settings': [],
+      },
+      {
+        'id': 'Computational4',
+        'name': 'Computational 4',
+        'input': [{
+          'name': 'Number',
+          'type': 'number',
+          'value': '',
+        }],
+        'output': [{
+          'name': 'Other numbers',
+          'type': 'number',
+          'value': '',
+        }],
+        'settings': [],
+      }];
+      return this._createMenuFromList(computationals);
     },
 
     _getAnalyses: function() {
-      const analyses = ['Analysis 1', 'Analysis 2', 'Analysis 3'];
-      return this._createMenuFromListOld(analyses);
+      const analyses = [{
+        'id': 'Analysis1',
+        'name': 'Analysis 1',
+        'input': [{
+          'name': 'Number',
+          'type': 'number',
+          'value': '',
+        }],
+        'output': [],
+        'settings': [],
+      },
+      {
+        'id': 'Analysis2',
+        'name': 'Analysis 2',
+        'input': [{
+          'name': 'Number',
+          'type': 'scene',
+          'value': '',
+        }],
+        'output': [],
+        'settings': [],
+      }];
+      return this._createMenuFromList(analyses);
     },
   },
 });
