@@ -34,12 +34,12 @@ qx.Class.define('qxapp.components.settingsView',
         alignX: 'right',
       });
       let titleBox = new qx.ui.container.Composite(box);
-      let settLabel = new qx.ui.basic.Label('Settings');
+      let settLabel = new qx.ui.basic.Label(this.tr('Settings'));
       settLabel.set({
         alignX: 'center',
         alignY: 'middle',
       });
-      let doneBtn = new qx.ui.form.Button('Done');
+      let doneBtn = new qx.ui.form.Button(this.tr('Done'));
 
       titleBox.add(settLabel, {width: '75%'});
       titleBox.add(doneBtn);
@@ -56,37 +56,37 @@ qx.Class.define('qxapp.components.settingsView',
       this.add(this._settingsBox);
     },
 
-    SetNodeMetadata: function(nodeMetadata) {
-      console.log(nodeMetadata.GetMetaData());
+    SetNodeMetadata: function(node) {
+      console.log(node.GetMetaData());
 
       this._settingsBox.removeAll();
 
-      let changeTitleBox = new qx.ui.container.Composite(new qx.ui.layout.HBox(10));
-      {
-        let titleLabel = new qx.ui.basic.Label('Node Title');
-        titleLabel.set({
-          alignX: 'right',
-          alignY: 'middle',
-        });
-        let titleInput = new qx.ui.form.TextField(nodeMetadata.GetMetaData().name);
-        changeTitleBox.add(titleLabel, {width: '50%'});
-        changeTitleBox.add(titleInput, {width: '50%'});
-      }
-      this._settingsBox.add(changeTitleBox);
-
       let form = new qx.ui.form.Form();
-      for (let i = 0; i < nodeMetadata.GetMetaData().settings.length; i++) {
-        let sett = nodeMetadata.GetMetaData().settings[i];
-        let input = this._fromMetadataToQxSetting(sett);
+      {
+        // Expose title
+        let input = new qx.ui.form.TextField().set({
+          value: node.GetMetaData().name,
+        });
         if (input) {
-          form.add(input, sett.text, null, sett.name);
+          form.add(input, this.tr('Node Title'), null, 'NodeTitle');
+        }
+      }
+
+      {
+        // Expose settings
+        for (let i = 0; i < node.GetMetaData().settings.length; i++) {
+          let sett = node.GetMetaData().settings[i];
+          let input = this._fromMetadataToQxSetting(sett);
+          if (input) {
+            form.add(input, sett.text, null, sett.name);
+          }
         }
       }
 
       // form with Compute and reset button
-      let computeButton = new qx.ui.form.Button('Save');
+      let computeButton = new qx.ui.form.Button(this.tr('Save'));
       form.addButton(computeButton);
-      let resetButton = new qx.ui.form.Button('Reset');
+      let resetButton = new qx.ui.form.Button(this.tr('Reset'));
       form.addButton(resetButton);
 
       let controller = new qx.data.controller.Form(null, form);
@@ -94,9 +94,12 @@ qx.Class.define('qxapp.components.settingsView',
 
       computeButton.addListener('execute', function() {
         if (form.validate()) {
-          for (let i = 0; i < nodeMetadata.GetMetaData().settings.length; i++) {
-            let settKey = nodeMetadata.GetMetaData().settings[i].name;
-            nodeMetadata.GetMetaData().settings[i].value = model.get(settKey);
+          node.GetMetaData().name = model.get('NodeTitle');
+          node.SetServiceName(node.GetMetaData().name);
+
+          for (let i = 0; i < node.GetMetaData().settings.length; i++) {
+            let settKey = node.GetMetaData().settings[i].name;
+            node.GetMetaData().settings[i].value = model.get(settKey);
           }
         }
       }, this);
@@ -128,6 +131,9 @@ qx.Class.define('qxapp.components.settingsView',
           for (let j = 0; j < metadata.options.length; j++) {
             let optionItem = new qx.ui.form.ListItem(metadata.options[j], null, j);
             input.add(optionItem);
+          }
+          if (input.getSelectables().length > 0) {
+            input.setSelection([input.getSelectables()[metadata.value]]);
           }
           break;
         case 'boolean':
