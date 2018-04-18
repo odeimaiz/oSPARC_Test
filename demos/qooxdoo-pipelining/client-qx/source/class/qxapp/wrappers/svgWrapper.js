@@ -48,8 +48,8 @@ qx.Class.define('qxapp.wrappers.svgWrapper',
       dynLoader.start();
     },
 
-    CreateEmptyCanvas: function(id, left, top, width, height) {
-      return SVG(id).size('100%', '100%').viewbox(left, top, width, height);
+    CreateEmptyCanvas: function(id) {
+      return SVG(id).size('100%', '100%');
     },
 
     _getControls(x1, y1, x2, y2) {

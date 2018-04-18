@@ -14,7 +14,7 @@ qx.Class.define('qxapp.components.settingsView',
 
     this.set({
       layout: box,
-      backgroundColor: 'green',
+      backgroundColor: '#eee',
     });
   },
 

@@ -17,6 +17,9 @@ qx.Class.define('qxapp.components.workbench',
       layout: canvas,
     });
 
+    this._desktop = new qx.ui.window.Desktop(new qx.ui.window.Manager());
+    this.add(this._desktop, {left: 0, top: 0, right: 0, bottom: 0});
+
     let plusButton = this._getPlusButton();
 
     this.add(plusButton, {
@@ -37,13 +40,6 @@ qx.Class.define('qxapp.components.workbench',
     _svgWrapper: null,
     _linksCanvas: null,
 
-    SetSize: function(viewWidth, viewHeight) {
-      this.set({
-        width: viewWidth,
-        height: viewHeight,
-      });
-    },
-
     _createSvgLinksLayer: function() {
       this._svgWrapper = new qxapp.wrappers.svgWrapper();
 
@@ -54,9 +50,11 @@ qx.Class.define('qxapp.components.workbench',
           let svgPlaceholder = qx.dom.Element.create('div');
           qx.bom.element.Attribute.set(svgPlaceholder, 'id', LINKS_LAYER_ID);
           qx.bom.element.Style.set(svgPlaceholder, 'z-index', 12);
+          qx.bom.element.Style.set(svgPlaceholder, 'width', '100%');
+          qx.bom.element.Style.set(svgPlaceholder, 'height', '100%');
           scope.getContentElement().getDomElement().appendChild(svgPlaceholder);
 
-          scope._linksCanvas = scope._svgWrapper.CreateEmptyCanvas(LINKS_LAYER_ID, 0, 0, scope.getWidth(), scope.getHeight());
+          scope._linksCanvas = scope._svgWrapper.CreateEmptyCanvas(LINKS_LAYER_ID);
         }
       }, scope);
 
@@ -119,6 +117,7 @@ qx.Class.define('qxapp.components.workbench',
     _addNodeToWorkbench(node) {
       let nNodesB = this._nodes.length;
       node.moveTo(50 + nNodesB*250, 200);
+      this._desktop.add(node);
       node.open();
       this._nodes.push(node);
 

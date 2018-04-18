@@ -13,37 +13,27 @@ qx.Class.define('qxapp.layout.layoutManager',
       height: docHeight,
     });
 
-    let box = new qx.ui.layout.VBox();
-    box.set({
-      spacing: 10,
-      alignX: 'center',
-      alignY: 'middle',
-    });
+    let box = new qx.ui.layout.Canvas();
 
     this.set({
       layout: box,
     });
 
     // Create a horizontal split pane
-    this._pane = new qx.ui.splitpane.Pane('horizontal').set({
-      width: docWidth,
-      height: docHeight,
-    });
+    this._pane = new qx.ui.splitpane.Pane('horizontal');
 
-    const settingsWidth = 500;
+    const settingsWidth = 400;
     this._settingsView = new qxapp.components.settingsView();
     this._settingsView.set({
       minWidth: settingsWidth/2,
       maxWidth: settingsWidth,
     });
-    this._settingsView.SetSize(settingsWidth, docHeight);
     this._pane.add(this._settingsView, 0);
 
     this._workbench = new qxapp.components.workbench();
-    this._workbench.SetSize(docWidth-settingsWidth, docHeight);
     this._pane.add(this._workbench, 1);
 
-    this.add(this._pane);
+    this.add(this._pane, {left: 0, top: 0, right: 0, bottom: 0});
 
     let scope = this;
     window.addEventListener( 'resize', function() {
@@ -76,6 +66,16 @@ qx.Class.define('qxapp.layout.layoutManager',
       let html = document.documentElement;
       let docHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
       return docHeight;
+    },
+
+    _showSettings: function(showSettings) {
+      if (showSettings) {
+        this._settingsView.show();
+        this._workbench.show();
+      } else {
+        this._settingsView.exclude();
+        this._workbench.show();
+      }
     },
   },
 
