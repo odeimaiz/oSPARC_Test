@@ -229,17 +229,20 @@ qx.Class.define('qxapp.components.workbench',
       let pipeline = {};
       for (let i = 0; i < this._nodes.length; i++) {
         const nodeId = this._nodes[i].getNodeId();
-        pipeline[nodeId] = [];
+        pipeline[nodeId] = {};
+        pipeline[nodeId].serviceId = this._nodes[i].GetMetaData().id;
+        pipeline[nodeId].settings = this._nodes[i].GetMetaData().settings;
+        pipeline[nodeId].children = [];
         for (let j = 0; j < this._links.length; j++) {
           if (nodeId === this._links[j].getInputNodeId()) {
-            pipeline[nodeId].push(this._links[j].getOutputNodeId());
+            pipeline[nodeId].children.push(this._links[j].getOutputNodeId());
           }
         }
       }
       // remove nodes with no offspring
       for (let nodeId in pipeline) {
         if (pipeline.hasOwnProperty(nodeId)) {
-          if (pipeline[nodeId].length === 0) {
+          if (pipeline[nodeId].children.length === 0) {
             delete pipeline[nodeId];
           }
         }
