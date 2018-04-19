@@ -3,8 +3,6 @@
  * @asset(qxapp/icons/workbench/*)
  */
 
-const LINKS_LAYER_ID = 'drawing';
-
 qx.Class.define('qxapp.components.workbench',
 {
   extend: qx.ui.container.Composite,
@@ -17,6 +15,9 @@ qx.Class.define('qxapp.components.workbench',
       layout: canvas,
     });
 
+    this._svgWidget = new qxapp.components.svgWidget();
+    this.add(this._svgWidget, {left: 0, top: 0, right: 0, bottom: 0});
+
     this._desktop = new qx.ui.window.Desktop(new qx.ui.window.Manager());
     this.add(this._desktop, {left: 0, top: 0, right: 0, bottom: 0});
 
@@ -26,8 +27,6 @@ qx.Class.define('qxapp.components.workbench',
       right: 20,
       bottom: 20,
     });
-
-    this._createSvgLinksLayer();
   },
 
   events: {
@@ -37,29 +36,8 @@ qx.Class.define('qxapp.components.workbench',
   members: {
     _nodes: [],
     _links: [],
-    _svgWrapper: null,
-    _linksCanvas: null,
-
-    _createSvgLinksLayer: function() {
-      this._svgWrapper = new qxapp.wrappers.svgWrapper();
-
-      let scope = this;
-      this._svgWrapper.addListener(('SvgLibReady'), function(e) {
-        let ready = e.getData();
-        if (ready) {
-          let svgPlaceholder = qx.dom.Element.create('div');
-          qx.bom.element.Attribute.set(svgPlaceholder, 'id', LINKS_LAYER_ID);
-          qx.bom.element.Style.set(svgPlaceholder, 'z-index', 12);
-          qx.bom.element.Style.set(svgPlaceholder, 'width', '100%');
-          qx.bom.element.Style.set(svgPlaceholder, 'height', '100%');
-          scope.getContentElement().getDomElement().appendChild(svgPlaceholder);
-
-          scope._linksCanvas = scope._svgWrapper.CreateEmptyCanvas(LINKS_LAYER_ID);
-        }
-      }, scope);
-
-      this._svgWrapper.Init();
-    },
+    _desktop: null,
+    _svgWidget: null,
 
     _getPlusButton: function() {
       let menuNodeTypes = new qx.ui.menu.Menu();
@@ -136,7 +114,7 @@ qx.Class.define('qxapp.components.workbench',
             const y1 = pointList[0][1];
             const x2 = pointList[1][0];
             const y2 = pointList[1][1];
-            scope._svgWrapper.UpdateCurve(link.getRepresentation(), x1, y1, x2, y2);
+            scope._svgWidget.UpdateCurve(link.getRepresentation(), x1, y1, x2, y2);
           }
         });
       }, scope);
@@ -152,7 +130,7 @@ qx.Class.define('qxapp.components.workbench',
       const y1 = pointList[0][1];
       const x2 = pointList[1][0];
       const y2 = pointList[1][1];
-      let linkRepresentation = this._svgWrapper.DrawCurve(this._linksCanvas, x1, y1, x2, y2);
+      let linkRepresentation = this._svgWidget.DrawCurve(x1, y1, x2, y2);
       let linkBase = new qxapp.components.linkBase(linkRepresentation);
       linkBase.setInputId(node1.getNodeId());
       linkBase.setOutputId(node2.getNodeId());

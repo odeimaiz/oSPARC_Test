@@ -52,25 +52,18 @@ qx.Class.define('qxapp.wrappers.svgWrapper',
       return SVG(id);
     },
 
-    _getControls(x1, y1, x2, y2) {
-      const offset = 100;
-      return [{x: x1+offset, y: y1}, {x: x2-offset, y: y2}, {x: x2, y: y2}];
+    DrawCurve: function(draw, controls) {
+      return draw.path().M(controls[0].x, controls[0].y).C(controls[1], controls[2], controls[3]).fill('none').stroke({width: 3, color: '#00F'});
     },
 
-    DrawCurve: function(draw, x1, y1, x2, y2) {
-      const controls = this._getControls(x1, y1, x2, y2);
-      return draw.path().M(x1, y1).C(controls[0], controls[1], controls[2]).fill('none').stroke({width: 3, color: '#00F'});
-    },
-
-    UpdateCurve: function(curve, x1, y1, x2, y2) {
+    UpdateCurve: function(curve, controls) {
       if (curve.type === 'path') {
         let mSegment = curve.getSegment(0);
-        mSegment.coords = [x1, y1];
+        mSegment.coords = [controls[0].x, controls[0].y];
         curve.replaceSegment(0, mSegment);
 
-        const controls = this._getControls(x1, y1, x2, y2);
         let cSegment = curve.getSegment(1);
-        cSegment.coords = [controls[0].x, controls[0].y, controls[1].x, controls[1].y, controls[2].x, controls[2].y];
+        cSegment.coords = [controls[1].x, controls[1].y, controls[2].x, controls[2].y, controls[3].x, controls[3].y];
         curve.replaceSegment(1, cSegment);
       }
     },
