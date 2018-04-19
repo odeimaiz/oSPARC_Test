@@ -18,11 +18,11 @@ qx.Class.define('qxapp.components.linkBase',
       check: 'String',
       nullable: false,
     },
-    inputId: {
+    inputNodeId: {
       init: null,
       check: 'String',
     },
-    outputId: {
+    outputNodeId: {
       init: null,
       check: 'String',
     },

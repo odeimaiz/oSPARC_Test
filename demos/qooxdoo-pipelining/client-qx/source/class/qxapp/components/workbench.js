@@ -22,9 +22,14 @@ qx.Class.define('qxapp.components.workbench',
     this.add(this._desktop, {left: 0, top: 0, right: 0, bottom: 0});
 
     let plusButton = this._getPlusButton();
-
     this.add(plusButton, {
       right: 20,
+      bottom: 20,
+    });
+
+    let playButton = this._getPlayButton();
+    this.add(playButton, {
+      right: 50+20+20,
       bottom: 20,
     });
   },
@@ -56,6 +61,22 @@ qx.Class.define('qxapp.components.workbench',
         height: 50,
       });
       return plusButton;
+    },
+
+    _getPlayButton: function() {
+      let playButton = new qx.ui.form.Button(null, 'qxapp/icons/workbench/play-icon.png');
+      playButton.set({
+        width: 50,
+        height: 50,
+      });
+
+      let scope = this;
+      playButton.addListener('execute', function() {
+        let pipelineDataStructure = scope._serializePipelineDataStructure();
+        console.log(pipelineDataStructure);
+      }, scope);
+
+      return playButton;
     },
 
     _createMenuFromList: function(nodesList) {
@@ -107,8 +128,8 @@ qx.Class.define('qxapp.components.workbench',
         linksInvolved.forEach((linkId) => {
           let link = scope._getLink(linkId);
           if (link) {
-            let node1 = scope._getNode(link.getInputId());
-            let node2 = scope._getNode(link.getOutputId());
+            let node1 = scope._getNode(link.getInputNodeId());
+            let node2 = scope._getNode(link.getOutputNodeId());
             const pointList = scope._getLinkPoints(node1, node2);
             const x1 = pointList[0][0];
             const y1 = pointList[0][1];
@@ -132,8 +153,8 @@ qx.Class.define('qxapp.components.workbench',
       const y2 = pointList[1][1];
       let linkRepresentation = this._svgWidget.DrawCurve(x1, y1, x2, y2);
       let linkBase = new qxapp.components.linkBase(linkRepresentation);
-      linkBase.setInputId(node1.getNodeId());
-      linkBase.setOutputId(node2.getNodeId());
+      linkBase.setInputNodeId(node1.getNodeId());
+      linkBase.setOutputNodeId(node2.getNodeId());
       node1.AddOutputLinkID(linkBase.getLinkId());
       node2.AddInputLinkID(linkBase.getLinkId());
       this._links.push(linkBase);
@@ -175,10 +196,10 @@ qx.Class.define('qxapp.components.workbench',
     _getConnectedLinks: function(id) {
       let connectedLinks = Set([]);
       this._links.forEach((link) => {
-        if (link.getInputId() === id) {
+        if (link.getInputNodeId() === id) {
           connectedLinks.add(link.getLinkId());
         }
-        if (link.getOutputId() === id) {
+        if (link.getOutputNodeId() === id) {
           connectedLinks.add(link.getLinkId());
         }
       });
@@ -202,6 +223,28 @@ qx.Class.define('qxapp.components.workbench',
       win.addListener('resize', function(e) {
         threeWidget.ViewResized(e.getData().width, e.getData().height);
       }, this);
+    },
+
+    _serializePipelineDataStructure: function() {
+      let pipeline = {};
+      for (let i = 0; i < this._nodes.length; i++) {
+        const nodeId = this._nodes[i].getNodeId();
+        pipeline[nodeId] = [];
+        for (let j = 0; j < this._links.length; j++) {
+          if (nodeId === this._links[j].getInputNodeId()) {
+            pipeline[nodeId].push(this._links[j].getOutputNodeId());
+          }
+        }
+      }
+      // remove nodes with no offspring
+      for (let nodeId in pipeline) {
+        if (pipeline.hasOwnProperty(nodeId)) {
+          if (pipeline[nodeId].length === 0) {
+            delete pipeline[nodeId];
+          }
+        }
+      }
+      return pipeline;
     },
 
     _getProducers: function() {
