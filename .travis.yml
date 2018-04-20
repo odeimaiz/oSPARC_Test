@@ -1,5 +1,6 @@
 matrix:
-  include:# Use containers instead of full VMs for faster startup.
+  include:
+    # Use containers instead of full VMs for faster startup.
     - sudo: false
       language: python
       python:
@@ -22,7 +23,7 @@ matrix:
 
     - language: node_js
       node_js:
-        - '6'
+        - "6"
       install:
         - "npm install -g npm@latest"
         - "npm install --save-dev eslint"
