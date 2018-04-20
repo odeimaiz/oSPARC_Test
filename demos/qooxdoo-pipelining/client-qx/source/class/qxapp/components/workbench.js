@@ -231,6 +231,8 @@ qx.Class.define('qxapp.components.workbench',
         const nodeId = this._nodes[i].getNodeId();
         pipeline[nodeId] = {};
         pipeline[nodeId].serviceId = this._nodes[i].GetMetaData().id;
+        pipeline[nodeId].input = this._nodes[i].GetMetaData().input;
+        pipeline[nodeId].output = this._nodes[i].GetMetaData().output;
         pipeline[nodeId].settings = this._nodes[i].GetMetaData().settings;
         pipeline[nodeId].children = [];
         for (let j = 0; j < this._links.length; j++) {
@@ -292,19 +294,111 @@ qx.Class.define('qxapp.components.workbench',
 
     _getComputationals: function() {
       const computationals = [{
-        'id': 'Computational1',
-        'name': 'Computational 1',
-        'input': [{
-          'name': 'Scene',
-          'type': 'scene',
-          'value': '',
-        }],
-        'output': [{
-          'name': 'Some numbers',
-          'type': 'number',
-          'value': '',
-        }],
-        'settings': [],
+        'id': 'ColleenClancy',
+        'name': 'Colleen Clancy',
+        'input': [
+          {
+            'name': 'NaValue',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'KrValue',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'BCLValue',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'beatsValue',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'LigandValue',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'cAMKIIValue',
+            'type': 'number',
+            'value': 10,
+          },
+        ],
+        'output': [
+          {
+            'name': 'outputFolder',
+            'type': 'folder',
+            'value': 'url',
+          },
+          {
+            'name': 'Allresults',
+            'order': [
+              't',
+              'I_Ca_store',
+              'Ito',
+              'Itof',
+              'Itos',
+              'INa',
+              'IK1',
+              's1',
+              'k1',
+              'Jserca',
+              'Iks',
+              'Jleak',
+              'ICFTR',
+              'Incx',
+            ],
+            'type': 'csv',
+          },
+        ],
+        'settings': [
+          {
+            'name': 'NaValue',
+            'text': 'Na blocker drug concentration',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'KrValue',
+            'text': 'Kr blocker drug concentration',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'BCLValue',
+            'text': 'Basic cycle length (BCL)',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'beatsValue',
+            'text': 'Number of beats',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'LigandValue',
+            'text': 'Ligand concentration',
+            'type': 'number',
+            'value': 10,
+          },
+          {
+            'name': 'cAMKIIValue',
+            'options': [
+              'A',
+              'B',
+              'C',
+              'D',
+            ],
+            'text': 'Adjust cAMKII activity level',
+            'type': 'select',
+            'value': 0,
+          },
+        ],
       },
       {
         'id': 'Computational2',
