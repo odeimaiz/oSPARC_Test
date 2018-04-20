@@ -206,7 +206,7 @@ qx.Class.define('qxapp.components.workbench',
       return connectedLinks;
     },
 
-    _addModeler: function() {
+    _addModeler: function(){
       const minWidth = 400;
       const minHeight = 400;
 
