@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "lintMe": "./node_modules/.bin/eslint -c ./client-qx/.eslintrc.json ./client-qx/source/class/qxapp/*.js"
+    "lintMe": "eslint -c ./client-qx/.eslintrc.json ./client-qx/source/class/qxapp/\*.js"
   }
 }

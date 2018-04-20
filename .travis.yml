@@ -32,5 +32,5 @@ matrix:
       # command to run tests
       script:
         - cd demos && cd qooxdoo-pipelining
-        - npm run ./lintMe
+        - npm run lintMe
         - cd .. && cd ..
