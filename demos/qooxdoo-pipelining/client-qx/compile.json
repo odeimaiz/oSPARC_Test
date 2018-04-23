@@ -15,6 +15,7 @@
   ],
   "defaultTarget": "source",
   "locales": ["en", "de"],
+  "lint-check": true,
 
   "applications": [
     {

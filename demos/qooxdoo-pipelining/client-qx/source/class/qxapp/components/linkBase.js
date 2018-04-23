@@ -1,5 +1,6 @@
-qx.Class.define('qxapp.components.linkBase',
-{
+/* global qxapp */
+
+qx.Class.define("qxapp.components.LinkBase", {
   extend: qx.core.Object,
 
   construct: function(representation) {
@@ -12,19 +13,19 @@ qx.Class.define('qxapp.components.linkBase',
 
   properties: {
     representation: {
-      init: null,
+      init: null
     },
     linkId: {
-      check: 'String',
-      nullable: false,
+      check: "String",
+      nullable: false
     },
     inputNodeId: {
       init: null,
-      check: 'String',
+      check: "String"
     },
     outputNodeId: {
       init: null,
-      check: 'String',
-    },
-  },
+      check: "String"
+    }
+  }
 });
