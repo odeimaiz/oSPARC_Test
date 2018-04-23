@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lintBoilerplate": "./node_modules/.bin/eslint -c ./eslintrc.json ./templates/boilerplate/client-qx/source/class/qxapp/**/*.js",
+    "lintBoilerplate": "./node_modules/.bin/eslint -c ./eslintrc ./templates/boilerplate/client-qx/source/class/qxapp/**/*.js",
     "lintQxPipelining": "eslint -c ./demos/qooxdoo-pipelining/client-qx/.eslintrc ./demos/qooxdoo-pipelining/client-qx/source/class/qxapp/**/*.js"
   }
 }
