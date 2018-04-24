@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lintBoilerplate": "eslint ./templates/boilerplate/client-qx/source/class/qxapp/**/*.js",
+    "lintBoilerplate": "eslint ./templates/boilerplate/**/*.js",
     "lintQxPipelining": "eslint ./demos/qooxdoo-pipelining/client-qx/source/class/qxapp/**/*.js"
   }
 }
