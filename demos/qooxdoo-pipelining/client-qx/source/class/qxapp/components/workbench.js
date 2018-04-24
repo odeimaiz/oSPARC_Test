@@ -144,7 +144,6 @@ qx.Class.define("qxapp.components.Workbench", {
     },
 
     _addNode: function(node) {
-      node.
       let nodeBase = new qxapp.components.NodeBase(node);
       this._addNodeToWorkbench(nodeBase);
 
