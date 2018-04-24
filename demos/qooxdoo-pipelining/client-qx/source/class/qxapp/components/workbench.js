@@ -36,11 +36,16 @@ qx.Class.define("qxapp.components.Workbench", {
     this._nodes = [];
     this._links = [];
 
-    let plusButton = this._getPlusButton();
-    this.add(plusButton, {
+    this._plusButton = this._getPlusButton();
+    this.add(this._plusButton, {
       right: 20,
       bottom: 20
     });
+    let scope = this;
+    this._plusButton.addListener("execute", function() {
+      scope._plusButton.setMenu(scope._getMatchingServicesMenu());
+    }, scope);
+    this._plusButtonCount = 0;
 
     let playButton = this._getPlayButton();
     this.add(playButton, {
@@ -58,24 +63,36 @@ qx.Class.define("qxapp.components.Workbench", {
     _links: null,
     _desktop: null,
     _svgWidget: null,
+    _plusButton: null,
+    _plusButtonCount: null,
+    _selection: null,
 
     _getPlusButton: function() {
-      let menuNodeTypes = new qx.ui.menu.Menu();
-
-      let producersButton = new qx.ui.menu.Button("Producers", null, null, this._getProducers());
-      let computationalsButton = new qx.ui.menu.Button("Computationals", null, null, this._getComputationals());
-      let analysesButton = new qx.ui.menu.Button("Analyses", null, null, this._getAnalyses());
-
-      menuNodeTypes.add(producersButton);
-      menuNodeTypes.add(computationalsButton);
-      menuNodeTypes.add(analysesButton);
-
-      let plusButton = new qx.ui.form.MenuButton(null, "qxapp/icons/workbench/add-icon.png", menuNodeTypes);
+      let plusButton = new qx.ui.form.MenuButton(null, "qxapp/icons/workbench/add-icon.png", this._getMatchingServicesMenu());
       plusButton.set({
         width: 50,
         height: 50
       });
       return plusButton;
+    },
+
+    _getMatchingServicesMenu: function() {
+      let menuNodeTypes = new qx.ui.menu.Menu();
+
+      this._plusButtonCount = this._plusButtonCount + 1;
+
+      if (this._plusButtonCount % 3 === 0) {
+        let producersButton = new qx.ui.menu.Button("Producers", null, null, this._getProducers());
+        menuNodeTypes.add(producersButton);
+      } else if (this._plusButtonCount % 3 === 1) {
+        let computationalsButton = new qx.ui.menu.Button("Computationals", null, null, this._getComputationals());
+        menuNodeTypes.add(computationalsButton);
+      } else if (this._plusButtonCount % 3 === 2) {
+        let analysesButton = new qx.ui.menu.Button("Analyses", null, null, this._getAnalyses());
+        menuNodeTypes.add(analysesButton);
+      }
+
+      return menuNodeTypes;
     },
 
     _getPlayButton: function() {
@@ -127,6 +144,7 @@ qx.Class.define("qxapp.components.Workbench", {
     },
 
     _addNode: function(node) {
+      node.
       let nodeBase = new qxapp.components.NodeBase(node);
       this._addNodeToWorkbench(nodeBase);
 
